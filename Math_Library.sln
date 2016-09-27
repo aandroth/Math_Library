@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Math_Library", "Math_Library\Math_Library.vcxproj", "{A40C22AC-0D63-4A09-BD5C-E033CEA27615}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathTest", "MathTest\MathTest.vcxproj", "{704492E7-E25B-4B10-B309-F33E5C794CA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A40C22AC-0D63-4A09-BD5C-E033CEA27615} = {A40C22AC-0D63-4A09-BD5C-E033CEA27615}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
