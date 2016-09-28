@@ -82,13 +82,12 @@ int main()
 	assert((Vec2(0, 8) /= 8) == Vec2(0, 1));
 	assert((Vec2(0, 8) /= 4) == Vec2(0, 2));
 
-	assert(magnitude(Vec2(4, 2)) == 20.0);
-
+	assert(magnitude(Vec2(4, 3)) == 5.0);
 
 	assert((Vec3(0, 7, 1) == Vec3(0, 7, 1)) == true);
 	assert((Vec3(0, 7, 5) == Vec3(0, 2, 5)) == false);
-	assert((Vec3(0, 7, 3) != Vec3(0, 7, 6)) == false);
-	assert((Vec3(0, 7, 3) != Vec3(0, 7, 3)) == true);
+	assert((Vec3(0, 7, 3) != Vec3(0, 7, 6)) == true);
+	assert((Vec3(0, 7, 3) != Vec3(0, 7, 3)) == false);
 
 	assert((Vec3(0, 7, 3) + Vec3(0, 4, 3)) == Vec3(0, 11, 6));
 	assert((Vec3(0, 7, 3) + Vec3(0, 2, 3)) == Vec3(0, 9, 6));
@@ -115,12 +114,12 @@ int main()
 	assert((Vec3(0, 8, 3) *= 8) == Vec3(0, 64, 24));
 	assert((Vec3(0, 8, 3) *= 4) == Vec3(0, 32, 12));
 
-	assert((Vec3(0, 8, 4) / 4) == Vec3(0, 1));
-	assert((Vec3(0, 8, 4) / 1) == Vec3(0, 4));
-	assert((Vec3(0, 8, 4) /= 8) == Vec3(0, 0.5));
-	assert((Vec3(0, 8, 4) /= 4) == Vec3(0, 1));
+	assert((Vec3(0, 8, 4) / 4) == Vec3(0, 2, 1));
+	assert((Vec3(0, 8, 4) / 1) == Vec3(0, 8, 4));
+	assert((Vec3(0, 8, 4) /= 8) == Vec3(0, 1, 0.5));
+	assert((Vec3(0, 8, 4) /= 4) == Vec3(0, 2, 1));
 
-	assert(magnitude(Vec3(4, 2)) == 20);
+	assert(magnitude(Vec3(4, 2, 4)) == 6);
 
 	//// Create the window
 	//sfw::initContext(800, 600, "NSFW Draw");

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+
 struct Vec2
 {
 	float x, y;
@@ -31,9 +32,32 @@ Vec2 operator/= (Vec2 &lhs, const float &rhs);
 
 float magnitude(const Vec2 &v);
 
+// Reduce vector's length to 1
+// v/magnitude(v)
+Vec2 normal(const Vec2 &v);
+
+// Scalar Projection : width of the right angle between two vectors
+// x1*x2 + y1*y2
+float dot(const Vec2 &lhs, const Vec2 &rhs);
+
+// Find the angle between two vectors
+// acos(dot(normal(v1), normal(v2)))
+float angleBetween(const Vec2 &lhs, const Vec2 &rhs);
+
+// Find a right angle perpendicular vector (2D only!)
+// (y,-x)
+Vec2 perp(const Vec2 &v);
+
+// Find the angle of the vector (2D only!)
+// atan2f(y,x)
+float angle(const Vec2 &v);
+
+// vec2{cos(a), sin(a)};
+Vec2 fromAngle(float a);
+
 struct Vec3
 {
-	float x, y;
+	float x, y, z;
 	Vec3(float, float, float);
 
 };
@@ -61,18 +85,14 @@ Vec3 operator/= (Vec3 &lhs, const float &rhs);
 
 float magnitude(const Vec3 &v);
 
+// Scalar Projection : width of the right angle between two vectors
+float dot(const Vec3 &lhs, const Vec3 &rhs);
 
+// Find the angle between two vectors
+float angleBetween(const Vec3 &lhs, const Vec2 &rhs);
 
-struct Vec3
-{
-	float x, y, z;
-	Vec3(float newX, float newY, float newZ)
-	{
-		x = newX;
-		y = newY;
-		z = newZ;
-	}
-};
+// Find a vector perpendicular to the plane created by two vectors
+Vec3 cross(const Vec3 &lhs, const Vec3 &rhs);
 
 struct Plane
 {

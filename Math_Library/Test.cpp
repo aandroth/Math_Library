@@ -54,7 +54,15 @@ Vec2 operator*= (Vec2 &lhs, const Vec2 &rhs)
 
 Vec2 operator/ (const Vec2 &lhs, const Vec2 &rhs)
 {
-	return Vec2(lhs.x / rhs.x, lhs.y / rhs.y);
+	float returnX, returnY;
+	
+	if (rhs.x == 0) {returnX = 0;}
+	else {returnX = lhs.x / rhs.x;}
+
+	if (rhs.y == 0) { returnY = 0; }
+	else { returnY = lhs.y / rhs.y; }
+
+	return Vec2(returnX, returnY);
 }
 Vec2 operator/= (Vec2 &lhs, const Vec2 &rhs)
 {
@@ -72,7 +80,12 @@ Vec2 operator*= (Vec2 &lhs, const float &rhs)
 
 Vec2 operator/ (const Vec2 &lhs, const float &rhs)
 {
-	return Vec2(lhs.x / rhs, lhs.y / rhs);
+	float returnX, returnY;
+
+	if (rhs == 0) { returnX = 0; returnY = 0; }
+	else { returnX = lhs.x / rhs;  returnY = lhs.y / rhs; }
+
+	return Vec2(returnX, returnY);
 }
 Vec2 operator/= (Vec2 &lhs, const float &rhs)
 {
@@ -82,6 +95,52 @@ Vec2 operator/= (Vec2 &lhs, const float &rhs)
 float magnitude(const Vec2 &v)
 {
 	return sqrt(v.x*v.x + v.y*v.y);
+}
+
+// Reduce vector's length to 1
+// v/magnitude(v)
+Vec2 normal(const Vec2 &v)
+{
+	float x_Normal = v.y;
+	float y_Normal = -v.x;
+	float normalizedX, normalizedY;
+
+	normalizedX = (x_Normal / sqrt(x_Normal*x_Normal + y_Normal*y_Normal));
+	normalizedY = (y_Normal / sqrt(x_Normal*x_Normal + y_Normal*y_Normal));
+
+	return Vec2(normalizedX, normalizedY);
+}
+
+// Scalar Projection : width of the right angle between two vectors
+// x1*x2 + y1*y2
+float dot(const Vec2 &lhs, const Vec2 &rhs)
+{
+	return (lhs.x * rhs.x + lhs.y * rhs.y);
+}
+
+// Find the angle between two vectors
+// acos(dot(normal(v1), normal(v2)))
+float angleBetween(const Vec2 &lhs, const Vec2 &rhs)
+{
+	return acos(dot(normal(lhs), normal(rhs)));
+}
+
+// Find a right angle perpendicular vector (2D only!)
+Vec2 perp(const Vec2 &v)
+{
+	return Vec2(v.y, -v.x);
+}
+
+// Find the angle of the vector (2D only!)
+float angle(const Vec2 &v)
+{
+	return atan2f(v.y, v.x);
+}
+
+// vec2{cos(a), sin(a)};
+Vec2 fromAngle(float a)
+{
+	return Vec2(cos(a), sin(a));
 }
 
 
@@ -140,7 +199,18 @@ Vec3 operator*= (Vec3 &lhs, const Vec3 &rhs)
 
 Vec3 operator/ (const Vec3 &lhs, const Vec3 &rhs)
 {
-	return Vec3(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z);
+	float returnX, returnY, returnZ;
+
+	if (rhs.x == 0) { returnX = 0; }
+	else { returnX = lhs.x / rhs.x; }
+
+	if (rhs.y == 0) { returnY = 0; }
+	else { returnY = lhs.y / rhs.y; }
+
+	if (rhs.z == 0) { returnZ = 0; }
+	else { returnZ = lhs.z / rhs.z; }
+
+	return Vec3(returnX, returnY, returnZ);
 }
 Vec3 operator/= (Vec3 &lhs, const Vec3 &rhs)
 {
@@ -158,7 +228,12 @@ Vec3 operator*= (Vec3 &lhs, const float &rhs)
 
 Vec3 operator/ (const Vec3 &lhs, const float &rhs)
 {
-	return Vec3(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs);
+	float returnX, returnY, returnZ;
+
+	if (rhs == 0) { returnX = 0; returnY = 0; returnZ = 0;}
+	else { returnX = lhs.x / rhs; returnY = lhs.y / rhs;  returnZ = lhs.z / rhs;}
+
+	return Vec3(returnX, returnY, returnZ);
 }
 Vec3 operator/= (Vec3 &lhs, const float &rhs)
 {
@@ -170,6 +245,23 @@ float magnitude(const Vec3 &v)
 	return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
 }
 
+// Scalar Projection : width of the right angle between two vectors
+float dot(const Vec3 &lhs, const Vec3 &rhs)
+{
+	return (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
+}
+
+// Find the angle between two vectors
+float angleBetween(const Vec3 &lhs, const Vec2 &rhs)
+{
+	return 0;  // PLACEHOLDER
+}
+
+// Find a vector perpendicular to the plane created by two vectors
+Vec3 cross(const Vec3 &lhs, const Vec3 &rhs) 
+{
+	return Vec3(0, 0, 0);  // PLACEHOLDER
+}
 
 int doNothing(int x)
 {
