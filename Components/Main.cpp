@@ -11,7 +11,6 @@ int main()
 	Transform tr;
 	tr.position = Vec2(400, 300);
 
-
 	while (sfw::stepContext())
 	{
 	}

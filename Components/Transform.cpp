@@ -1,5 +1,9 @@
 #include "Transform.h"
 
+Transform::Transform() : position(Vec2(0, 0)), scale(Vec2(1, 1)), facing(0)
+{
+}
+
 Vec2 Transform::getDirection()
 {
 	return fromAngle(facing);

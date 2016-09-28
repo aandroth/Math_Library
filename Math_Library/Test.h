@@ -1,12 +1,15 @@
 #pragma once
 
+#include "Flops.h"
 #include <cmath>
+
+#ifndef TEST_H
+#define TEST_H
 
 struct Vec2
 {
 	float x, y;
 	Vec2(float, float);
-
 };
 
 bool operator== (const Vec2 &lhs, const Vec2 &rhs);
@@ -88,8 +91,10 @@ float magnitude(const Vec3 &v);
 // Scalar Projection : width of the right angle between two vectors
 float dot(const Vec3 &lhs, const Vec3 &rhs);
 
+Vec3 normal(const Vec3 &v);
+
 // Find the angle between two vectors
-float angleBetween(const Vec3 &lhs, const Vec2 &rhs);
+float angleBetween(const Vec3 &lhs, const Vec3 &rhs);
 
 // Find a vector perpendicular to the plane created by two vectors
 Vec3 cross(const Vec3 &lhs, const Vec3 &rhs);
@@ -114,3 +119,5 @@ float vector_difference(Vec2, Vec2);
 float inner_product(Vec3, Vec3);
 float point_plane_distance(Vec3, Plane);
 float bezier_curve(float, Plane);
+
+#endif

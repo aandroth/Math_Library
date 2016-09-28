@@ -101,14 +101,8 @@ float magnitude(const Vec2 &v)
 // v/magnitude(v)
 Vec2 normal(const Vec2 &v)
 {
-	float x_Normal = v.y;
-	float y_Normal = -v.x;
-	float normalizedX, normalizedY;
-
-	normalizedX = (x_Normal / sqrt(x_Normal*x_Normal + y_Normal*y_Normal));
-	normalizedY = (y_Normal / sqrt(x_Normal*x_Normal + y_Normal*y_Normal));
-
-	return Vec2(normalizedX, normalizedY);
+	return Vec2((v.x / sqrt(v.x*v.x + v.y*v.y)), 
+		(v.y / sqrt(v.x*v.x + v.y*v.y)));
 }
 
 // Scalar Projection : width of the right angle between two vectors
@@ -122,7 +116,7 @@ float dot(const Vec2 &lhs, const Vec2 &rhs)
 // acos(dot(normal(v1), normal(v2)))
 float angleBetween(const Vec2 &lhs, const Vec2 &rhs)
 {
-	return acos(dot(normal(lhs), normal(rhs)));
+	return radiansToDegrees(acos(degreesToRadians(dot(normal(lhs), normal(rhs)))));
 }
 
 // Find a right angle perpendicular vector (2D only!)
@@ -251,16 +245,27 @@ float dot(const Vec3 &lhs, const Vec3 &rhs)
 	return (lhs.x*rhs.x + lhs.y*rhs.y + lhs.z*rhs.z);
 }
 
-// Find the angle between two vectors
-float angleBetween(const Vec3 &lhs, const Vec2 &rhs)
+// Reduce vector's length to 1
+// v/magnitude(v)
+Vec3 normal(const Vec3 &v)
 {
-	return 0;  // PLACEHOLDER
+	return Vec3((v.x / sqrt(v.x*v.x + v.y*v.y + v.z*v.z)),
+		(v.y / sqrt(v.x*v.x + v.y*v.y + v.z*v.z)),
+		(v.z / sqrt(v.x*v.x + v.y*v.y + v.z*v.z)));
+}
+
+// Find the angle between two vectors
+float angleBetween(const Vec3 &lhs, const Vec3 &rhs)
+{
+	return acos(dot(normal(lhs), normal(rhs)));
 }
 
 // Find a vector perpendicular to the plane created by two vectors
-Vec3 cross(const Vec3 &lhs, const Vec3 &rhs) 
+Vec3 cross(const Vec3 &lhs, const Vec3 &rhs)
 {
-	return Vec3(0, 0, 0);  // PLACEHOLDER
+	return Vec3((lhs.y*rhs.z - lhs.z*rhs.y),
+		(lhs.z*rhs.x - lhs.x*rhs.z),
+		(lhs.x*rhs.y - lhs.y*rhs.x));
 }
 
 int doNothing(int x)

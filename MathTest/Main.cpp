@@ -46,7 +46,6 @@ int main()
 	assert(bezier_curve(7, Plane(1, 3, 5, 7)) == -1901);
 	assert(bezier_curve(1.0, Plane(1, 2, 1, 2)) == 2);
 
-
 	assert((Vec2(0, 7) == Vec2(0, 7)) == true);
 	assert((Vec2(0, 7) == Vec2(0, 2)) == false);
 	assert((Vec2(0, 7) != Vec2(0, 7)) == false);
@@ -84,6 +83,29 @@ int main()
 
 	assert(magnitude(Vec2(4, 3)) == 5.0);
 
+	assert(normal(Vec2(5, 0)) == Vec2(1, 0));
+	assert(normal(Vec2(0, 7)) == Vec2(0, 1));
+
+	assert(dot(Vec2(5, 0), Vec2(5, 0)) == 25);
+	assert(dot(Vec2(3, 4), Vec2(5, 0)) == 15);
+
+	float t = angleBetween(Vec2(1, 1), Vec2(1, 0));
+	std::cout << t << std::endl;
+	t = radiansToDegrees(t);
+	std::cout << t << std::endl;
+
+	assert(angleBetween(Vec2(1, 0), Vec2(0, 1)) == 90);
+	assert(angleBetween(Vec2(1, 1), Vec2(1, 0)) == 45);
+
+	assert(perp(Vec2(7, 7)) == Vec2(7, -7));
+	assert(perp(Vec2(1, 7)) == Vec2(7, -1));
+
+	assert(angle(Vec2(0, 1)) == 0);
+	assert(angle(Vec2(1, 1)) == 45);
+
+	assert(fromAngle(45) == Vec2(1, 1));
+	assert(fromAngle(90) == Vec2(0, 1));
+
 	assert((Vec3(0, 7, 1) == Vec3(0, 7, 1)) == true);
 	assert((Vec3(0, 7, 5) == Vec3(0, 2, 5)) == false);
 	assert((Vec3(0, 7, 3) != Vec3(0, 7, 6)) == true);
@@ -120,6 +142,23 @@ int main()
 	assert((Vec3(0, 8, 4) /= 4) == Vec3(0, 2, 1));
 
 	assert(magnitude(Vec3(4, 2, 4)) == 6);
+
+	assert(dot(Vec3(1, 1, 1), Vec3(3, 5, 7)) == 15);
+	assert(dot(Vec3(3, 2, 3), Vec3(3, 5, 7)) == 40);
+
+	assert(normal(Vec3(4, 4, 2)) == Vec3(2 / 3, 2 / 3, 1 / 3));
+	assert(normal(Vec3(4, 3, 0)) == Vec3(4 / 5, 3 / 5, 0));
+
+	// Find the angle between two vectors
+	assert(angleBetween(Vec3(0, 5, 0), Vec3(0, 0, 2)) == 90);
+	assert(angleBetween(Vec3(1, 5, 1), Vec3(1, 5, 1)) == 0);
+
+	//Vec3 t = cross(Vec3(1, 0, 0), Vec3(0, 1, 0));
+	//std::cout << t.x << ", " << t.y << ", " << t.z << std::endl;
+
+	// Find a vector perpendicular to the plane created by two vectors
+	assert(cross(Vec3(1, 0, 0), Vec3(0, 1, 0)) == Vec3(0, 0, 1));
+
 
 	//// Create the window
 	//sfw::initContext(800, 600, "NSFW Draw");
