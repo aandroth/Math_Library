@@ -89,10 +89,11 @@ int main()
 	assert(dot(Vec2(5, 0), Vec2(5, 0)) == 25);
 	assert(dot(Vec2(3, 4), Vec2(5, 0)) == 15);
 
+	Vec2 v = normal(Vec2(1, 1));
 	float t = angleBetween(Vec2(1, 1), Vec2(1, 0));
 	std::cout << t << std::endl;
-	t = radiansToDegrees(t);
-	std::cout << t << std::endl;
+	std::cout << "v,x: " << v.x << std::endl;
+	std::cout << "v.y: " << v.y << std::endl;
 
 	assert(angleBetween(Vec2(1, 0), Vec2(0, 1)) == 90);
 	assert(angleBetween(Vec2(1, 1), Vec2(1, 0)) == 45);
