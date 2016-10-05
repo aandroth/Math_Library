@@ -12,8 +12,9 @@ public:
 
 	Transform();
 
-	Vec2 getDirection();
+	Vec2 getDirection() const;
 	void setDirection(const Vec2 &dir);
 
-	void debugDraw();
+	void debugDraw() const;
 };
+

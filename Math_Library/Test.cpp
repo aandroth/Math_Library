@@ -1,5 +1,11 @@
 #include "Test.h"
 
+Vec2::Vec2()
+{
+	x = 0;
+	y = 0;
+}
+
 Vec2::Vec2(float newX, float newY)
 {
 	x = newX;
@@ -137,6 +143,73 @@ Vec2 fromAngle(float a)
 	return Vec2(cos(a), sin(a));
 }
 
+Vec2 lerp(const Vec2 start, const Vec2 end, const float alpha)
+{
+	return Vec2((start.x + alpha *(end.x - start.x)),
+		(start.y + alpha * (end.y - start.y)));
+}
+
+Vec2 quadBezier(const Vec2 start, const Vec2 mid, const Vec2 end, const float alpha)
+{
+	Vec2 mid1 = lerp(start, mid, alpha);
+
+	Vec2 mid2 = lerp(mid, end, alpha);
+
+	return lerp(mid1, mid2, alpha);
+}
+
+Vec2 cubicBezier(const Vec2 start, const Vec2 mid1, const Vec2 mid2, const Vec2 end, const float alpha)
+{
+	Vec2 cube_mid1 = lerp(start, mid1, alpha);
+
+	Vec2 cube_mid2 = lerp(mid1, mid2, alpha);
+
+	Vec2 cube_mid3 = lerp(mid2, end, alpha);
+
+	return quadBezier(cube_mid1, cube_mid2, cube_mid3, alpha);
+
+	//Vec2 cube_mid1 = quadBezier(start, mid1, mid2, alpha);
+	//Vec2 cube_mid2 = quadBezier(mid1, mid2, end, alpha);
+
+	//return lerp(cube_mid1, cube_mid2, alpha);
+}
+
+Vec2 hermiteSpline(const Vec2 start, const Vec2 end, const Vec2 tangent0, const Vec2 tangent1, float alpha)
+{
+	float a_squr = alpha*alpha;
+	float a_cube = alpha*a_squr;
+
+	float h00 = 2 * a_cube - 3 * a_squr + 1;
+	float h01 = -2 * a_cube + 3 * a_squr;
+	float h10 = a_cube - 2 * a_squr + alpha;
+	float h11 = a_cube - a_squr;
+
+	return start * h00 + tangent0 * h10 + end * h01 + tangent1 * h11;
+}
+
+
+Vec2 cardinalSpline(const Vec2 start, const Vec2 mid, const Vec2 end, float tightness, float alpha)
+{
+	Vec2 tangent0 = (mid - start) * tightness;
+	Vec2 tangent1 = (end - mid) * tightness;
+
+	float a_squr = alpha*alpha;
+	float a_cube = alpha*a_squr;
+
+	float h00 = 2 * a_cube - 3 * a_squr + 1;
+	float h01 = -2 * a_cube + 3 * a_squr;
+	float h10 = a_cube - 2 * a_squr + alpha;
+	float h11 = a_cube - a_squr;
+
+	return start * h00 + tangent0 * h10 + end * h01 + tangent1 * h11;
+}
+
+Vec3::Vec3()
+{
+	x = 0;
+	y = 0;
+	z = 0;
+}
 
 Vec3::Vec3(float newX, float newY, float newZ)
 {

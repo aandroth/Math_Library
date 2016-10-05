@@ -26,5 +26,8 @@
     <ClInclude Include="Flops.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bezier Curves.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

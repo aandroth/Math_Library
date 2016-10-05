@@ -9,6 +9,7 @@
 struct Vec2
 {
 	float x, y;
+	Vec2();
 	Vec2(float, float);
 };
 
@@ -58,9 +59,20 @@ float angle(const Vec2 &v);
 // vec2{cos(a), sin(a)};
 Vec2 fromAngle(float a);
 
+Vec2 lerp(const Vec2 start, const Vec2 end, const float alpha);
+
+Vec2 quadBezier(const Vec2 start, const Vec2 mid, const Vec2 end, const float alpha);
+
+Vec2 cubicBezier(const Vec2 start, const Vec2 mid1, const Vec2 mid2, const Vec2 end, const float alpha);
+
+Vec2 hermiteSpline(const Vec2 start, const Vec2 end, const Vec2 tangent0, const Vec2 tangent1, float alpha);
+
+Vec2 cardinalSpline(const Vec2 start, const Vec2 mid, const Vec2 end, float tightness, float alpha);
+
 struct Vec3
 {
 	float x, y, z;
+	Vec3();
 	Vec3(float, float, float);
 
 };

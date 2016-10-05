@@ -149,6 +149,7 @@
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bezier Curves.h" />
     <ClInclude Include="Flops.h" />
     <ClInclude Include="Test.h" />
   </ItemGroup>
