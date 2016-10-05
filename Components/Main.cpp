@@ -178,10 +178,9 @@ int main()
 		//tra.debugDraw();
 		//sfw::drawString(font, std::to_string(sfw::getDeltaTime()).c_str(), 400, 600, 48, 48, 0, ' ');
 
-		space.update(rig, sfw::getDeltaTime());
+		space.update(tra, rig, sfw::getDeltaTime());
 		rig.integrate(tra, sfw::getDeltaTime());
 		tra.debugDraw();
-
 	}
 
 	sfw::termContext();
