@@ -4,7 +4,7 @@
 #define FLOPS_H_INCLUDED
 
 #include <cmath>
-
+#include <vector>
 
 const float PI = 3.14159265359;
 
@@ -85,5 +85,28 @@ static float catRomSpline(float start, float end, float alpha)
 	return 0;
 }
 
+static std::vector<float> matrixMultiplier(const float lhsv[], const int lhsWidth, const int lhsHeight,
+									const float rhsv[], const int rhsWidth, const int newSize)
+{
+	std::vector<float> v;
+
+	for (int ii = 0; ii < newSize; ++ii)
+	{
+		v.push_back(0);
+	}
+
+	for (int ii = 0; ii < lhsHeight; ++ii)
+	{
+		for (int jj = 0; jj < rhsWidth; ++jj)
+		{
+			for (int kk = 0; kk < lhsWidth; ++kk)
+			{
+				v[ii*lhsHeight + jj] += lhsv[ii*lhsHeight + kk] * rhsv[kk*lhsWidth + jj];
+			}
+		}
+	}
+
+	return v;
+}
 
 #endif
