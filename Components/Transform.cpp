@@ -1,7 +1,11 @@
 #include "Transform.h"
 
-Transform::Transform(float x, float y, float w, float, float)
+Transform::Transform(float x, float y, float w, float h, float a)
 {
+	m_position = Vec2(x, y);
+	m_scale = Vec2(w, h);
+	m_facing = a;
+
 	m_parent = nullptr;
 }
 
@@ -43,20 +47,17 @@ void Transform::debugDraw(const Mat3 &T) const
 
 	Vec3 pos = Vec3(L.z1, L.z2, L.z3);
 
-	Vec3 right = L * Vec3(100, 0, 1);
-	Vec3 up =    L * Vec3(0, 10, 1);
+	Vec3 right = L * Vec3(10, 0, 1);
+	Vec3 up    = L * Vec3(0, 10, 1);
 
-	for (int ii = 0; ii < 3; ++ii)
+	sfw::drawLine(pos.x, pos.y, up.x, up.y, RED);
+	sfw::drawLine(pos.x, pos.y, right.x, right.y, GREEN);
+
+	if (m_parent != nullptr)
 	{
-		std::cout << L.mm[ii][0] << " " << L.mm[ii][1] << " " << L.mm[ii][2] << "\n\n";
+		Mat3 P = m_parent->getGlobalTransform();
+		sfw::drawLine(pos.x, pos.y, P.v[2], P.v[5], BLUE);
 	}
 
-	std::cout << pos.x << " " << pos.y << "\n";
-	std::cout << right.x << " " << right.y << " " << right.z << "\n";
-
-	sfw::drawLine(pos.x, pos.y, right.x, right.y, RED);
-	sfw::drawLine(pos.x, pos.y, up.x, up.y, GREEN);
-
 	sfw::drawCircle(pos.x, pos.y, 12, 12, WHITE);
-	//sfw::drawCircle(m_position.x, m_position.y, 12, 12, 0x888888FF);
 }

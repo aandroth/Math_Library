@@ -176,23 +176,23 @@ int main()
 		////std::cout << tra.position.y << std::endl;
 		//tra.position = tra.position + rig.velocity * sfw::getDeltaTime();
 
-		if (tra.m_position.x <= -30)
-			tra.m_position.x = 830;
-		else if (tra.m_position.x > 830)
-			tra.m_position.x = -30;
-		if (tra.m_position.y > 630)
-			tra.m_position.y = -30;
-		else if (tra.m_position.y < -30)
-			tra.m_position.y = 630;
+		if (playerTransform.m_position.x <= -30)
+			playerTransform.m_position.x = 830;
+		else if (playerTransform.m_position.x > 830)
+			playerTransform.m_position.x = -30;
+		if (playerTransform.m_position.y > 630)
+			playerTransform.m_position.y = -30;
+		else if (playerTransform.m_position.y < -30)
+			playerTransform.m_position.y = 630;
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 
 		//tra.debugDraw();
 		//sfw::drawString(font, std::to_string(sfw::getDeltaTime()).c_str(), 400, 600, 48, 48, 0, ' ');
 
-		space.update(tra, rig, sfw::getDeltaTime());
-		rig.integrate(tra, sfw::getDeltaTime());
-		tra.debugDraw();
+		space.update(playerTransform, rig, sfw::getDeltaTime());
+		rig.integrate(playerTransform, sfw::getDeltaTime());
+		//tra.debugDraw();
 		playerTransform.debugDraw();
 		rig.debugDraw(playerTransform);
 		ST1.debugDraw();

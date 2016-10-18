@@ -91,7 +91,7 @@ Mat3 operator* (const Mat3 &lhs, const Mat3 &rhs)
 
 	for (int ii = 0; ii < 9; ++ii)
 	{
-		if (abs(matrixVector[ii]) < 0.07)
+		if (abs(matrixVector[ii]) < 0.0000007)
 		{
 			matrixArray[ii] = 0;
 		}

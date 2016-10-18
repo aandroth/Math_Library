@@ -9,7 +9,7 @@ SpaceshipLocomotion::SpaceshipLocomotion()
 	maxThrust = 100.0;
 
 	turn = 0;
-	turnSpeed = 1;
+	turnSpeed = 50;
 	maxTurnSpeed = 30.0;
 }
 

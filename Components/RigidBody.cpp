@@ -64,6 +64,7 @@ void RigidBody::debugDraw(Transform trans)
 {
 	sfw::drawLine(trans.m_position.x, trans.m_position.y,
 		trans.m_position.x+velocity.x, trans.m_position.y+velocity.y, CYAN);
+
 	sfw::drawLine(trans.m_position.x + velocity.x, trans.m_position.y + velocity.y,
 		trans.m_position.x + velocity.x+force.x, trans.m_position.y + velocity.y+force.y, MAGENTA);
 }
