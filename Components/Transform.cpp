@@ -33,12 +33,22 @@ Mat3 Transform::getLocalTransform() const
 	return T * R * S;
 }
 
+Mat3 Transform::getSunTransform() const
+{
+	Mat3 T = translate(m_parent->m_position.x, m_parent->m_position.y);
+	Mat3 S = scale(m_parent->m_scale.x, m_parent->m_scale.y);
+	Mat3 R = rotateByDegrees(m_parent->m_facing * 100001 * (1/determinant(Mat2(m_position, m_parent->m_position))));
+
+	return T * R * S;
+}
+
 Mat3 Transform::getGlobalTransform() const
 {
 	if (m_parent == nullptr)
 		return getLocalTransform();
 	else
-		return m_parent->getGlobalTransform() * getLocalTransform();
+		return getSunTransform() * getLocalTransform();
+		//return m_parent->getGlobalTransform() * getLocalTransform();
 }
 
 void Transform::debugDraw(const Mat3 &T) const
@@ -53,11 +63,6 @@ void Transform::debugDraw(const Mat3 &T) const
 	sfw::drawLine(pos.x, pos.y, up.x, up.y, RED);
 	sfw::drawLine(pos.x, pos.y, right.x, right.y, GREEN);
 
-	if (m_parent != nullptr)
-	{
-		Mat3 P = m_parent->getGlobalTransform();
-		sfw::drawLine(pos.x, pos.y, P.v[2], P.v[5], BLUE);
-	}
 
 	sfw::drawCircle(pos.x, pos.y, 12, 12, WHITE);
 }

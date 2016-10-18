@@ -30,17 +30,16 @@ int main()
 	rig.velocity = Vec2(0, 0);
 	int maxHieght = tra.m_position.y + 3;
 	
-	Transform playerTransform(200, 200),
+	Transform playerTransform(400, 300),
 		ST1(100, 0),
-		ST2(100, 0),
-		ST3(100, 0),
-		ST4(100, 0);
+		ST2(180, 0),
+		ST3(230, 0),
+		ST4(300, 0);
 
-	ST1.m_parent = &playerTransform;
-	ST2.m_parent = &ST1;
-	ST3.m_parent = &ST2;
-	ST4.m_parent = &ST3;
-
+	ST1.m_parent = &playerTransform;//
+	ST2.m_parent = &playerTransform;//&ST1;
+	ST3.m_parent = &playerTransform;//&ST2;
+	ST4.m_parent = &playerTransform;// &ST3;
 
 	while (sfw::stepContext())
 	{
@@ -184,6 +183,11 @@ int main()
 			playerTransform.m_position.y = -30;
 		else if (playerTransform.m_position.y < -30)
 			playerTransform.m_position.y = 630;
+
+		//ST1.m_facing = ST1.m_parent->m_facing + 20; //.setDirection(ST1.m_parent->getDirection() + Vec2(1.25, 1.25));
+		//ST2.m_facing = ST2.m_parent->m_facing + 40; //.setDirection(ST2.m_parent->getDirection() + Vec2(1.25, 1.25));
+		//ST3.m_facing = ST3.m_parent->m_facing + 60; //.setDirection(ST3.m_parent->getDirection() + Vec2(1.25, 1.25));
+		//ST4.m_facing = ST4.m_parent->m_facing + 80; //.setDirection(ST4.m_parent->getDirection() + Vec2(1.25, 1.25));
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 

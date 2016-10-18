@@ -19,6 +19,7 @@ public:
 	void setDirection(const Vec2 &dir);
 
 	Mat3 getLocalTransform() const;
+	Mat3 getSunTransform() const;
 	Mat3 getGlobalTransform() const;
 
 	void debugDraw(const Mat3 &T = mat3Identity()) const;

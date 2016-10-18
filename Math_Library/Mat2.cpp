@@ -16,6 +16,12 @@ Mat2::Mat2(float newX1, float newY1, float newX2, float newY2)
 	y2 = newY2;
 }
 
+Mat2::Mat2(Vec2 newV0, Vec2 newV1)
+{
+	c[0] = newV0;
+	c[1] = newV1;
+}
+
 bool operator== (const Mat2 &lhs, const Mat2 &rhs)
 {
 	if (lhs.x1 == rhs.x1 && lhs.y1 == rhs.y1 &&

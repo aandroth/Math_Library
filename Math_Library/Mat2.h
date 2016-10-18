@@ -20,6 +20,7 @@ union Mat2
 
 	Mat2();
 	Mat2(float, float, float, float);
+	Mat2(Vec2, Vec2);
 
 	float operator[](unsigned idx) const;
 	float & operator[](unsigned idx);
