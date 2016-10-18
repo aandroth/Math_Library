@@ -7,6 +7,7 @@
 #include <string>
 #include <time.h>
 #include <iostream>
+#include "Mat3.h"
 
 
 int main()
@@ -22,13 +23,24 @@ int main()
 
 	float grav = 0;
 	int timeStep = 0;
-	Transform tra;
+	Transform tra(200.0, 200.0, 1, 1, 0);
 	RigidBody rig;
 	SpaceshipLocomotion space;
-	tra.position = Vec2(100, 100);
+	tra.m_position = Vec2(100, 100);
 	rig.velocity = Vec2(0, 0);
-	int maxHieght = tra.position.y + 3;
+	int maxHieght = tra.m_position.y + 3;
 	
+	Transform playerTransform(200, 200),
+		ST1(100, 0),
+		ST2(100, 0),
+		ST3(100, 0),
+		ST4(100, 0);
+
+	ST1.m_parent = &playerTransform;
+	ST2.m_parent = &ST1;
+	ST3.m_parent = &ST2;
+	ST4.m_parent = &ST3;
+
 
 	while (sfw::stepContext())
 	{
@@ -164,14 +176,14 @@ int main()
 		////std::cout << tra.position.y << std::endl;
 		//tra.position = tra.position + rig.velocity * sfw::getDeltaTime();
 
-		if (tra.position.x <= -30)
-			tra.position.x = 830;
-		else if (tra.position.x > 830)
-			tra.position.x = -30;
-		if (tra.position.y > 630)
-			tra.position.y = -30;
-		else if (tra.position.y < -30)
-			tra.position.y = 630;
+		if (tra.m_position.x <= -30)
+			tra.m_position.x = 830;
+		else if (tra.m_position.x > 830)
+			tra.m_position.x = -30;
+		if (tra.m_position.y > 630)
+			tra.m_position.y = -30;
+		else if (tra.m_position.y < -30)
+			tra.m_position.y = 630;
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 
@@ -181,6 +193,12 @@ int main()
 		space.update(tra, rig, sfw::getDeltaTime());
 		rig.integrate(tra, sfw::getDeltaTime());
 		tra.debugDraw();
+		playerTransform.debugDraw();
+		rig.debugDraw(playerTransform);
+		ST1.debugDraw();
+		ST2.debugDraw();
+		ST3.debugDraw();
+		ST4.debugDraw();
 	}
 
 	sfw::termContext();

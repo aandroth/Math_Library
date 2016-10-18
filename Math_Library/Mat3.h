@@ -6,6 +6,7 @@
 #include "Flops.h"
 #include <cmath>
 #include <vector>
+#include <iostream>
 
 #ifndef MAT3_H
 #define MAT3_H
@@ -15,8 +16,8 @@ union Mat3
 	struct
 	{
 		float x1, y1, z1,
-			x2, y2, z2,
-			x3, y3, z3;
+				x2, y2, z2,
+				x3, y3, z3;
 	};
 	float v[9];
 	float mm[3][3];
@@ -32,6 +33,8 @@ union Mat3
 	float operator[](unsigned idx) const;
 	float & operator[](unsigned idx);
 };
+
+Mat3 mat3Identity();
 
 bool operator== (const Mat3 &lhs, const Mat3 &rhs);
 bool operator!= (const Mat3 &lhs, const Mat3 &rhs);

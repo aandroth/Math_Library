@@ -30,13 +30,13 @@ void RigidBody::integrate(Transform &trans, const float deltaTime)
 {
 	accelleration = force / mass;
 	velocity += accelleration * deltaTime + impulse/mass;
-	trans.position += velocity * deltaTime;
+	trans.m_position += velocity * deltaTime;
 	debugDraw(trans);
 	force = impulse = { 0, 0 };
 
 	angularAccelleration = torque / mass;
 	angularVelocity += angularAccelleration * deltaTime;
-	trans.facing += angularVelocity * deltaTime;
+	trans.m_facing += angularVelocity * deltaTime;
 	torque = 0;
 }
 
@@ -62,8 +62,8 @@ Vec2 RigidBody::getVelocity() const
 
 void RigidBody::debugDraw(Transform trans)
 {
-	sfw::drawLine(trans.position.x, trans.position.y,
-		trans.position.x+velocity.x, trans.position.y+velocity.y, CYAN);
-	sfw::drawLine(trans.position.x + velocity.x, trans.position.y + velocity.y,
-		trans.position.x + velocity.x+force.x, trans.position.y + velocity.y+force.y, MAGENTA);
+	sfw::drawLine(trans.m_position.x, trans.m_position.y,
+		trans.m_position.x+velocity.x, trans.m_position.y+velocity.y, CYAN);
+	sfw::drawLine(trans.m_position.x + velocity.x, trans.m_position.y + velocity.y,
+		trans.m_position.x + velocity.x+force.x, trans.m_position.y + velocity.y+force.y, MAGENTA);
 }

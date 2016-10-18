@@ -4,15 +4,20 @@ Mat3::Mat3()
 {
 	x1 = 0;
 	y1 = 0;
+	z1 = 0;
 	x2 = 0;
 	y2 = 0;
+	z2 = 0;
+	x3 = 0;
+	y3 = 0;
+	z3 = 0;
 }
 
 Mat3::Mat3(float new_v[])
 {
 	for (int ii = 0; ii < 9; ++ii)
 	{
-		v[ii] = new_v[0];
+		v[ii] = new_v[ii];
 	}
 }
 Mat3::Mat3(Vec3 v1, Vec3 v2, Vec3 v3)
@@ -28,7 +33,14 @@ Mat3::Mat3(float newX1, float newY1, float newZ1,
 {
 	x1 = newX1; y1 = newY1; z1 = newZ1;
 	x2 = newX2; y2 = newY2; z2 = newZ2;
-	x2 = newX3; y2 = newY3; z2 = newZ3;
+	x3 = newX3; y3 = newY3; z3 = newZ3;
+}
+
+Mat3 mat3Identity()
+{
+	return Mat3(1, 0, 0,
+				0, 1, 0,
+				0, 0, 1);
 }
 
 bool operator== (const Mat3 &lhs, const Mat3 &rhs)
@@ -79,8 +91,15 @@ Mat3 operator* (const Mat3 &lhs, const Mat3 &rhs)
 
 	for (int ii = 0; ii < 9; ++ii)
 	{
-		matrixArray[ii] = matrixVector[ii];
-	}
+		if (abs(matrixVector[ii]) < 0.07)
+		{
+			matrixArray[ii] = 0;
+		}
+		else
+		{
+			matrixArray[ii] = matrixVector[ii];
+		}
+	}	
 
 	return Mat3(matrixArray);
 }
@@ -132,9 +151,9 @@ float & Mat3::operator[](unsigned idx)
 
 float determinant(const Mat3 &lhs)
 {
-	return (lhs.mm[0][0] * (lhs.mm[1][1] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][1]) -
-			lhs.mm[0][1] * (lhs.mm[1][0] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][0]) +
-			lhs.mm[0][2] * (lhs.mm[1][0] * lhs.mm[2][1] - lhs.mm[1][1] * lhs.mm[2][0]));
+	return ((lhs.mm[0][0] * (lhs.mm[1][1] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][1])) -
+			(lhs.mm[0][1] * (lhs.mm[1][0] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][0])) +
+			(lhs.mm[0][2] * (lhs.mm[1][0] * lhs.mm[2][1] - lhs.mm[1][1] * lhs.mm[2][0])));
 }
 
 Mat3 transverse(const Mat3 &lhs)
@@ -156,7 +175,7 @@ Mat3 inverse(const Mat3 &lhs)
 {
 	Mat3 tr = transverse(lhs);
 
-	return Mat3(determinant(Mat2(tr.v[4], tr.v[5], tr.v[7], tr.v[8])),
+	return (Mat3(determinant(Mat2(tr.v[4], tr.v[5], tr.v[7], tr.v[8])),
 			   -determinant(Mat2(tr.v[3], tr.v[5], tr.v[6], tr.v[8])),
 				determinant(Mat2(tr.v[3], tr.v[4], tr.v[6], tr.v[7])),
 
@@ -166,7 +185,7 @@ Mat3 inverse(const Mat3 &lhs)
 
 				determinant(Mat2(tr.v[1], tr.v[2], tr.v[4], tr.v[5])),
 			   -determinant(Mat2(tr.v[0], tr.v[2], tr.v[3], tr.v[5])),
-				determinant(Mat2(tr.v[0], tr.v[1], tr.v[3], tr.v[4]))) * determinant(lhs);
+				determinant(Mat2(tr.v[0], tr.v[1], tr.v[3], tr.v[4]))) * (1/determinant(lhs)));
 }
 
 Mat3 scale(float w, float h)
@@ -183,13 +202,14 @@ Mat3 translate(float x, float y)
 }
 Mat3 rotateByDegrees(float a)
 {
+
 	return Mat3(cos(degreesToRadians(a)), -sin(degreesToRadians(a)), 0,
 			    sin(degreesToRadians(a)),  cos(degreesToRadians(a)), 0,
 				0,						   0,						1);
 }
 Mat3 rotateByRadians(float a)
 {
-	return Mat3(cos(a), sin(a), 0,
-			   -sin(a), cos(a), 0,
+	return Mat3(cos(a), -sin(a), 0,
+			    sin(a),  cos(a), 0,
 				0,		0,		1);
 }

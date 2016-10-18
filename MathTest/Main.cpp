@@ -179,22 +179,101 @@ int main()
 	assert(inverse(Mat2(1, 2, 0, 3)) == Mat2(1.0, -2 / 3.0, 0, 1.0 / 3.0));
 	assert(inverse(Mat2(7, 1, 1, 0)) == Mat2(0, 1, 1, -7.0));
 
+	assert(Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+	assert(!(Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0)));
+
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) + Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0)) == Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) + Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8)) == Mat3(0, 2, 4, 6, 8, 10, 12, 14, 16));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) += Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0)) == Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) += Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8)) == Mat3(0, 2, 4, 6, 8, 10, 12, 14, 16));
+
+	assert(Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) - Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0) == Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8));
+	assert(Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) - Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) -= Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0)) == Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) -= Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8)) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) * Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0)) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) * Mat3(1, 2, 3, 4, 5, 6, 7, 8, 9)) == Mat3(18, 21, 24, 54, 66, 78, 90, 111, 132));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) *= Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0)) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) *= Mat3(1, 2, 3, 4, 5, 6, 7, 8, 9)) == Mat3(18, 21, 24, 54, 66, 78, 90, 111, 132));
+	
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) * 0) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) * 7) == Mat3(0, 7, 14, 21, 28, 35, 42, 49, 56));
+
+	assert((0 * Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8)) == Mat3(0, 0, 0, 0, 0, 0, 0, 0, 0));
+	assert((7 * Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8)) == Mat3(0, 7, 14, 21, 28, 35, 42, 49, 56));
+
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) * Vec3(1, 1, 1)) == Vec3(3, 12, 21));
+	assert((Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8) * Vec3(0, 1, 2)) == Vec3(5, 14, 23));
+
+	assert(determinant(Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8)) == 0);
+	assert(determinant(Mat3(0, 1, 1, 3, 4, 5, 6, 7, 8)) == 3);
+
+	assert(transverse(Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8)) == Mat3(0, 3, 6, 1, 4, 7, 2, 5, 8));
+
+	assert(inverse(Mat3(3, 0, 2, 2, 0, -2, 0, 1, 1)) == Mat3(0.2, 0.2, 0, -0.2, 0.3, 1, 0.2, -0.3, 0));
+	
+	//Mat3 t = rotateByRadians(degreesToRadians(90))*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1));
+	//for (int ii = 0; ii < 9; ++ii)
+	//{
+	//	std::cout << t.v[ii] << std::endl;
+	//}
+
+	assert(scale(5, 5)*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1)) == Mat3(5, 0, 50, 0, 5, 0, 0, 0, 1));
+
+	assert(translate(5, 5)*(Mat3(1, 0, 0, 0, 1, 10, 0, 0, 1)) == Mat3(1, 0, 5, 0, 1, 15, 0, 0, 1));
+
+	assert(rotateByDegrees(90)*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1)) == Mat3(0, -1, 0, 1, 0, 10, 0, 0, 1));
+	assert(rotateByRadians(degreesToRadians(90))*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1)) == Mat3(0, -1, 0, 1, 0, 10, 0, 0, 1));
+
 	//Mat2 v = inverse(Mat2(7, 6, 5, 0));
 	//std::cout << v[0] << "\n";
 	//std::cout << v[1] << "\n";
 	//std::cout << v[2] << "\n";
 	//std::cout << v[3] << "\n";
 
-	//// Create the window
-	//sfw::initContext(800, 600, "NSFW Draw");
+	// Create the window
+	sfw::initContext(800, 600, "NSFW Draw");
 
-	//// Start the GameState loop
-	//while (sfw::stepContext())
-	//{
+	Vec2 oldPos = Vec2(400, 400);
+	Mat3 start = Mat3(1, 0, oldPos.x, 0, 1, oldPos.y, 0, 0, 1);
 
-	//}
+	//Mat3 R0 =  Mat3(1, 0, 0, 0, 1, 0, 0, );
 
-	//sfw::termContext();
+	Mat3 T0 = rotateByDegrees(-90)*Mat3(1, 0, 20, 0, 1, 0, 0, 0, 1);
+	Mat3 T1 = rotateByDegrees(45)* Mat3(1, 0, 40, 0, 1, 0, 0, 0, 1);
+	Mat3 T2 = rotateByDegrees(45)* Mat3(1, 0, 40, 0, 1, 0, 0, 0, 1);
+
+	// Start the GameState loop
+	while (sfw::stepContext())
+	{
+		std::cout << "Begin: \n";
+		start = Mat3(1, 0, 400, 0, 1, 400, 0, 0, 1);
+		oldPos = Vec2(start.z1, start.z2);
+		sfw::drawCircle(start.z1, start.z2, 25, 12, RED);
+		start = start*T0;
+		sfw::drawLine(oldPos.x, oldPos.y, start.z1, start.z2, RED);
+		oldPos = Vec2(start.z1, start.z2);
+		std::cout << "z1: " << start.z1 << "\n";
+		std::cout << "z2: " << start.z2 << "\n";
+
+		sfw::drawCircle(start.z1, start.z2, 25, 12, GREEN);
+		start = start*T1;
+		sfw::drawLine(oldPos.x, oldPos.y, start.z1, start.z2, GREEN);
+		oldPos = Vec2(start.z1, start.z2);
+		std::cout << "z1: " << start.z1 << "\n";
+		std::cout << "z2: " << start.z2 << "\n";
+
+		sfw::drawCircle(start.z1, start.z2, 25, 12, YELLOW);
+		start = start*T2;
+		sfw::drawLine(oldPos.x, oldPos.y, start.z1, start.z2, YELLOW);
+		oldPos = Vec2(start.z1, start.z2);
+		std::cout << "z1: " << start.z1 << "\n";
+		std::cout << "z2: " << start.z2 << "\n";
+		sfw::drawCircle(start.z1, start.z2, 25, 12, BLUE);
+	}
+
+	sfw::termContext();
 
 	return 0;
 }
