@@ -6,12 +6,11 @@ class Camera
 {
 public:
 
-	Camera();
+	Camera(Transform cameraTransform, Vec2 screenCenter, Vec2 screenZoom, float cameraLerpSnap);
 
-	Transform cameraTransform;
-	Vec2 screenCenter, screenZoom;
-
-	float cameraLerpSnap;
+	Transform m_cameraTransform;
+	Vec2 m_screenCenter, m_screenZoom;
+	float m_cameraLerpSnap;
 
 	void calculateCameraTransform(Transform playerTransform, float deltaTime);
 

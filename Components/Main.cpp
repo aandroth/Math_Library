@@ -26,8 +26,7 @@ int main()
 
 	float grav = 0;
 	int timeStep = 0;
-	Transform tra(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80),
-				cameraTransform;
+	Transform tra(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
 	RigidBody rig, sunRig;
 	SpaceshipLocomotion space;
 	tra.m_position = Vec2(100, 100);
@@ -65,8 +64,9 @@ int main()
 		ST2(180, 0),
 		ST3(230, 0),
 		ST4(300, 0);
-
-	Camera camera;
+	
+	Transform cameraTransform;
+	Camera sceneCamera(cameraTransform, Vec2(500, 500), Vec2(1, 1), 10);
 
 	sunRig.addTorque(700);
 
@@ -77,7 +77,6 @@ int main()
 
 	while (sfw::stepContext())
 	{
-		
 		//rig.integrate(tra, sfw::getDeltaTime());
 		////std::cout << tra.position.y << std::endl;
 		//tra.position = tra.position + rig.velocity * sfw::getDeltaTime();
@@ -104,19 +103,20 @@ int main()
 		rig.integrate(playerTransform, sfw::getDeltaTime());
 		sunRig.integrate(ST1, sfw::getDeltaTime());
 
-		cameraTransform.m_position = lerp(cameraTransform.m_position, 
-											playerTransform.getGlobalPosition(), 
-											sfw::getDeltaTime() * 10);
+		//cameraTransform.m_position = lerp(cameraTransform.m_position, 
+		//									playerTransform.getGlobalPosition(), 
+		//									sfw::getDeltaTime() * 10);
 
-		Mat3 proj = translate(500, 500) * scale(1, 1);
-		Mat3 view = inverse(cameraTransform.getGlobalTransform());
-		Mat3 camera = proj * view;
+		//Mat3 proj = translate(500, 500) * scale(1, 1);
+		//Mat3 view = inverse(cameraTransform.getGlobalTransform());
+		//Mat3 camera = proj * view;
+		sceneCamera.calculateCameraTransform(playerTransform, sfw::getDeltaTime());
 
-		playerTransform.debugDraw(camera);
-		ST1.debugDraw(camera);
-		ST2.debugDraw(camera);
-		ST3.debugDraw(camera);
-		ST4.debugDraw(camera);
+		playerTransform.debugDraw(sceneCamera.getCameraTransform());
+		ST1.debugDraw(sceneCamera.getCameraTransform());
+		ST2.debugDraw(sceneCamera.getCameraTransform());
+		ST3.debugDraw(sceneCamera.getCameraTransform());
+		ST4.debugDraw(sceneCamera.getCameraTransform());
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 
