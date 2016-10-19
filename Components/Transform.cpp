@@ -26,7 +26,6 @@ Vec2 Transform::getUp() const
 
 void Transform::rotateLocalTransform(float const &R)
 {
-	//rotateByMat3 = R;
 	m_facing += R;
 }
 
@@ -39,7 +38,7 @@ Mat3 Transform::getLocalTransform() const
 {
 	Mat3 T = translate(m_position.x, m_position.y) * translateByMat3;
 	Mat3 S = scale(m_scale.x, m_scale.y);
-	Mat3 R = rotateByDegrees(m_facing);// *rotateByMat3;
+	Mat3 R = rotateByDegrees(m_facing);
 
 	return  T * R * S;
 }
@@ -59,7 +58,14 @@ Mat3 Transform::getGlobalTransform() const
 		return getLocalTransform();
 	else
 		return getSunTransform() * getLocalTransform();
-		//return m_parent->getGlobalTransform() * getLocalTransform();
+	//return m_parent->getGlobalTransform() * getLocalTransform();
+}
+
+Vec2 Transform::getGlobalPosition() const
+{
+	Mat3 L = getGlobalTransform();
+
+	return Vec2(L.z1, L.z2);
 }
 
 void Transform::debugDraw(const Mat3 &T)
@@ -71,17 +77,8 @@ void Transform::debugDraw(const Mat3 &T)
 	Vec3 right = L * Vec3(20, 0, 1);
 	Vec3 up    = L * Vec3(0, 10, 1);
 
-	//sfw::drawLine(pos.x, pos.y, up.x, up.y, RED);
-	sfw::drawLine(m_position.x, m_position.y, right.x, right.y, GREEN);
-
-	pos = move;
-	m_position.x = pos.x;
-	m_position.y = pos.y;
-
-	//sfw::drawLine(pos.x,                    pos.y,                    right.x,                   right.y,				   GREEN);
-	//sfw::drawLine(right.x,                  right.y,                  pos.x + (right.x - up.x) , pos.y + (up.y - right.y), GREEN);
-	//sfw::drawLine(pos.x + (right.x - up.x), pos.y + (up.y - right.y), up.x,                      up.y,					   GREEN);
-	//sfw::drawLine(up.x,						up.y,					  pos.x,					 pos.y,					   GREEN);
+	if(m_parent == nullptr)
+	sfw::drawLine(pos.x, pos.y, right.x, right.y, GREEN);
 
 	sfw::drawCircle(pos.x, pos.y, 12, 12, GREEN);
 }

@@ -27,6 +27,21 @@
     <ClCompile Include="SpaceshipLocomotion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PlanetRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceshipRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetMotor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Transform.h">
@@ -36,6 +51,21 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="SpaceshipLocomotion.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerTransform.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceShipRenderer.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetRenderer.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetMotor.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>

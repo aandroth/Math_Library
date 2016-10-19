@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include "Test.h"
 #include "sfwdraw.h"
@@ -25,7 +26,6 @@ public:
 	Mat3 getLocalTransform() const;
 	Mat3 getSunTransform() const;
 	Mat3 getGlobalTransform() const;
-	Vec2 getGlobalPosition() const;
 
 	void debugDraw(const Mat3 &T = mat3Identity());
 
