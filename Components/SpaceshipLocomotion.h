@@ -7,18 +7,20 @@
 
 class SpaceshipLocomotion
 {
-	float vertThrust, horizThrust;
-	float speed, maxThrust;
+	float vertThrust, horizThrust,
+			speed, maxThrust,
+			vertBreak, horzBreak;
 
-	float turn, turnSpeed, maxTurnSpeed;
+	float turn, turnSpeed, maxTurnSpeed,
+			vertBreakAmount, horzBreakAmount;
 
 public:
 	SpaceshipLocomotion();
 
-	void doThrust();
-	void doTurn();
-	void doBreakThrust(RigidBody & r, float deltaTime);
-	void doBreakRotate(RigidBody & r, float deltaTime);
+	void doThrust(float addVertThrust);
+	void doTurn(float addHorzThrust);
+	void doBreakMovement(float addBreakMovement);
+	void doBreakRotate(float addBreakRotate);
 
-	void update(Transform & trans, RigidBody & rig, float deltaTime);
+	void update(Transform & trans, RigidBody & rig);
 };

@@ -2,6 +2,8 @@
 #include "Transform.h"
 #include "RigidBody.h"
 #include "SpaceshipLocomotion.h"
+#include "SpaceshipController.h"
+#include "SpaceShipRenderer.h"
 #include "Camera.h"
 #include "sfwdraw.h"
 #include <cmath>
@@ -27,14 +29,16 @@ int main()
 	float grav = 0;
 	int timeStep = 0;
 	Transform tra(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
-	RigidBody rig, sunRig;
-	SpaceshipLocomotion space;
+	RigidBody rig, sunRig, planet1Rig;
+	SpaceshipLocomotion shipLocomotion;
+	SpaceshipController shipController;
+	SpaceshipRenderer shipRenderer;
 	tra.m_position = Vec2(100, 100);
 	sunRig.velocity = Vec2(0, 0);
 	int maxHieght = tra.m_position.y + 3;
 
 	// Tank Transform object
-	Transform tankTransform(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
+	//Transform tankTransform(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
 
 	// Turret Transform object
 
@@ -63,17 +67,18 @@ int main()
 		ST1(500, 500),
 		ST2(180, 0),
 		ST3(230, 0),
-		ST4(300, 0);
+		ST4(100, 0);
 	
 	Transform cameraTransform;
 	Camera sceneCamera(cameraTransform, Vec2(500, 500), Vec2(1, 1), 10);
 
 	sunRig.addTorque(700);
+	planet1Rig.addTorque(2000);
 
 	//ST1
 	ST2.m_parent = &ST1;//&ST1;
 	ST3.m_parent = &ST1;//&ST2;
-	ST4.m_parent = &ST1;// &ST3;
+	ST4.m_parent = &ST3;
 
 	while (sfw::stepContext())
 	{
@@ -97,11 +102,16 @@ int main()
 
 		//space.update(tankTransform, rig, sfw::getDeltaTime());
 		//rig.integrate(tankTransform, sfw::getDeltaTime());		
-		
 
-		space.update(playerTransform, rig, sfw::getDeltaTime());
+		sceneCamera.calculateCameraTransform(playerTransform, sfw::getDeltaTime());
+
+		shipController.update(shipLocomotion);
+		shipLocomotion.update(playerTransform, rig);
+		shipRenderer.render(sceneCamera.getCameraTransform(), playerTransform);
 		rig.integrate(playerTransform, sfw::getDeltaTime());
+		//rig.debugDraw(sceneCamera.getCameraTransform(), playerTransform);
 		sunRig.integrate(ST1, sfw::getDeltaTime());
+		planet1Rig.integrate(ST3, sfw::getDeltaTime());
 
 		//cameraTransform.m_position = lerp(cameraTransform.m_position, 
 		//									playerTransform.getGlobalPosition(), 
@@ -110,11 +120,10 @@ int main()
 		//Mat3 proj = translate(500, 500) * scale(1, 1);
 		//Mat3 view = inverse(cameraTransform.getGlobalTransform());
 		//Mat3 camera = proj * view;
-		sceneCamera.calculateCameraTransform(playerTransform, sfw::getDeltaTime());
 
-		playerTransform.debugDraw(sceneCamera.getCameraTransform());
-		ST1.debugDraw(sceneCamera.getCameraTransform());
-		ST2.debugDraw(sceneCamera.getCameraTransform());
+		//playerTransform.debugDraw(sceneCamera.getCameraTransform());
+		//ST1.debugDraw(sceneCamera.getCameraTransform());
+		//ST2.debugDraw(sceneCamera.getCameraTransform());
 		ST3.debugDraw(sceneCamera.getCameraTransform());
 		ST4.debugDraw(sceneCamera.getCameraTransform());
 

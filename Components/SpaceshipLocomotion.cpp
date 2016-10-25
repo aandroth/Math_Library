@@ -1,4 +1,3 @@
-#pragma once
 #include "SpaceshipLocomotion.h"
 
 SpaceshipLocomotion::SpaceshipLocomotion()
@@ -11,54 +10,43 @@ SpaceshipLocomotion::SpaceshipLocomotion()
 	turn = 0;
 	turnSpeed = 50;
 	maxTurnSpeed = 30.0;
+
+	vertBreak = 0.0;
+	horzBreak = 0.0;
+	vertBreakAmount = 1;
+	horzBreakAmount = 1;
 }
 
-void SpaceshipLocomotion::doThrust()
+void SpaceshipLocomotion::doThrust(float addVertThrust)
 {
-	if (sfw::getKey('W') && vertThrust < maxThrust)
-		vertThrust += speed;
-	else if (sfw::getKey('S') && vertThrust > -maxThrust)
-		vertThrust -= speed;
+	vertThrust += speed*addVertThrust;
 }
 
-void SpaceshipLocomotion::doTurn()
+void SpaceshipLocomotion::doTurn(float addHorzThrust)
 {
-	if (sfw::getKey('A') && horizThrust < maxTurnSpeed)
-		horizThrust += turnSpeed;
-	else if (sfw::getKey('D') && horizThrust > -maxTurnSpeed)
-		horizThrust -= turnSpeed;
+	horizThrust += turnSpeed*addHorzThrust;
 }
 
-void SpaceshipLocomotion::doBreakThrust(RigidBody & rig, float deltaTime)
+void SpaceshipLocomotion::doBreakMovement(float addBreakMovement)
 {
-	rig.velocity -= rig.velocity*1.5*deltaTime;
+	vertBreak = addBreakMovement;
 }
 
-void SpaceshipLocomotion::doBreakRotate(RigidBody & rig, float deltaTime)
+void SpaceshipLocomotion::doBreakRotate(float addBreakRotate)
 {
-	rig.angularVelocity -= rig.angularVelocity*1.5*deltaTime;
+	horzBreak = addBreakRotate;
 }
 
-void SpaceshipLocomotion::update(Transform & trans, RigidBody & rig, float deltaTime)
+void SpaceshipLocomotion::update(Transform & trans, RigidBody & rig)
 {
-	doThrust();
-	doTurn();
-
-	if (sfw::getKey('Q'))
-	{
-		doBreakThrust(rig, deltaTime);
-	}
-	if (sfw::getKey('E'))
-	{
-		doBreakRotate(rig, deltaTime);
-	}
-
-	//std::cout << vertThrust << std::endl;
 	rig.addForce(Vec2(vertThrust*trans.getDirection().x,
 		vertThrust*trans.getDirection().y));
+	rig.addForce((rig.getVelocity() * -1 * vertBreakAmount)*vertBreak);
 
 	rig.addTorque(horizThrust);
+	rig.addTorque(horzBreak*(-rig.angularVelocity*horzBreakAmount));
 
-	vertThrust = 0;
-	horizThrust = 0;
+
+	vertThrust = horizThrust = 0.0;
+	vertBreak = horzBreak = 0.0;
 }

@@ -2,15 +2,9 @@
 
 Mat3::Mat3()
 {
-	x1 = 0;
-	y1 = 0;
-	z1 = 0;
-	x2 = 0;
-	y2 = 0;
-	z2 = 0;
-	x3 = 0;
-	y3 = 0;
-	z3 = 0;
+	x1 = 0; y1 = 0; z1 = 0;
+	x2 = 0; y2 = 0; z2 = 0;
+	x3 = 0; y3 = 0; z3 = 0;
 }
 
 Mat3::Mat3(float new_v[])
@@ -151,9 +145,14 @@ float & Mat3::operator[](unsigned idx)
 
 float determinant(const Mat3 &lhs)
 {
-	return ((lhs.mm[0][0] * (lhs.mm[1][1] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][1])) -
-			(lhs.mm[0][1] * (lhs.mm[1][0] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][0])) +
-			(lhs.mm[0][2] * (lhs.mm[1][0] * lhs.mm[2][1] - lhs.mm[1][1] * lhs.mm[2][0])));
+	float det = ((lhs.mm[0][0] * (lhs.mm[1][1] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][1])) -
+				 (lhs.mm[0][1] * (lhs.mm[1][0] * lhs.mm[2][2] - lhs.mm[1][2] * lhs.mm[2][0])) +
+				 (lhs.mm[0][2] * (lhs.mm[1][0] * lhs.mm[2][1] - lhs.mm[1][1] * lhs.mm[2][0])));
+
+	if (abs(det) < 0.000007)
+		det = 0.0001;
+
+	return det;
 }
 
 Mat3 transverse(const Mat3 &lhs)
@@ -202,10 +201,17 @@ Mat3 translate(float x, float y)
 }
 Mat3 rotateByDegrees(float a)
 {
+	float cos_result = cos(degreesToRadians(a));
+	if (abs(cos_result) < 0.0000007)
+		cos_result = 0.0;
 
-	return Mat3(cos(degreesToRadians(a)), -sin(degreesToRadians(a)), 0,
-			    sin(degreesToRadians(a)),  cos(degreesToRadians(a)), 0,
-				0,						   0,						1);
+	float sin_result = sin(degreesToRadians(a));
+	if (abs(sin_result) < 0.0000007)
+		sin_result = 0.0;
+
+	return Mat3(cos_result, -sin_result, 0,
+			    sin_result, cos_result,  0,
+				0,						 0,						1);
 }
 Mat3 rotateByRadians(float a)
 {

@@ -14,7 +14,7 @@ public:
 
 	Mat3 rotateByMat3 = mat3Identity(), translateByMat3 = mat3Identity();
 
-	Transform(float x = 0, float y = 0, float w = 1, float h = 1, float a = 0);
+	Transform(float x = 0.0, float y = 0.0, float w = 1.0, float h = 1.0, float a = 0.0);
 
 	Vec2 getUp() const;
 	Vec2 getDirection() const;

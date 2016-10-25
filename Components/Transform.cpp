@@ -1,5 +1,8 @@
 #include "Transform.h"
 
+#include <iostream>
+using std::cout;
+
 Transform::Transform(float x, float y, float w, float h, float a)
 {
 	m_position = Vec2(x, y);
@@ -49,6 +52,9 @@ Mat3 Transform::getSunTransform() const
 	Mat3 S = scale(m_parent->m_scale.x, m_parent->m_scale.y);
 	Mat3 R = rotateByDegrees(m_parent->m_facing * 100001 * (1/determinant(Mat2(m_position, m_parent->m_position))));
 
+	//cout << "m_position.x: " << (1 / determinant(Mat2(m_position, m_parent->m_position))) << "\n";
+	//cout << "m_position.y: " << R.z2 << "\n";
+
 	return T * R * S;
 }
 
@@ -57,8 +63,8 @@ Mat3 Transform::getGlobalTransform() const
 	if (m_parent == nullptr)
 		return getLocalTransform();
 	else
-		return getSunTransform() * getLocalTransform();
-	//return m_parent->getGlobalTransform() * getLocalTransform();
+		//return getSunTransform() * getLocalTransform();
+		return m_parent->getGlobalTransform() * getLocalTransform();
 }
 
 Vec2 Transform::getGlobalPosition() const
@@ -73,12 +79,12 @@ void Transform::debugDraw(const Mat3 &T)
 	Mat3 L = T * getGlobalTransform();
 
 	Vec3 pos = Vec3(L.z1, L.z2, L.z3);
-	Vec3 move = L * Vec3(moveBy, 0, 1);
-	Vec3 right = L * Vec3(20, 0, 1);
-	Vec3 up    = L * Vec3(0, 10, 1);
+	//Vec3 right = L * Vec3(20, 0, 1);
 
-	if(m_parent == nullptr)
-	sfw::drawLine(pos.x, pos.y, right.x, right.y, GREEN);
+	//if(m_parent == nullptr)
+	//sfw::drawLine(pos.x, pos.y, right.x, right.y, GREEN);
 
 	sfw::drawCircle(pos.x, pos.y, 12, 12, GREEN);
+	//cout << "pos.x: " << getGlobalTransform().z1 << "\n";
+	//cout << "pos.y: " << getGlobalTransform().z2 << "\n";
 }

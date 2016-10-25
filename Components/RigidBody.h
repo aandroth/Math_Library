@@ -27,6 +27,6 @@ public:
 	void setVelocity(Vec2);
 	Vec2 getVelocity() const;
 
-	void debugDraw(Transform);
+	void debugDraw(const Mat3 &T, const Transform &trans);
 };
 
