@@ -57,8 +57,8 @@ Mat3 Transform::getGlobalTransform() const
 	if (m_parent == nullptr)
 		return getLocalTransform();
 	else
-		return getSunTransform() * getLocalTransform();
-	//return m_parent->getGlobalTransform() * getLocalTransform();
+		//return getSunTransform() * getLocalTransform();
+		return m_parent->getGlobalTransform() * getLocalTransform();
 }
 
 Vec2 Transform::getGlobalPosition() const
@@ -72,13 +72,14 @@ void Transform::debugDraw(const Mat3 &T)
 {
 	Mat3 L = T * getGlobalTransform();
 
-	Vec3 pos = Vec3(L.z1, L.z2, L.z3);
+	Vec2 pos = Vec2(L.z1, L.z2);
 	Vec3 move = L * Vec3(moveBy, 0, 1);
 	Vec3 right = L * Vec3(20, 0, 1);
 	Vec3 up    = L * Vec3(0, 10, 1);
 
 	if(m_parent == nullptr)
-	sfw::drawLine(pos.x, pos.y, right.x, right.y, GREEN);
+	//sfw::drawLine(pos.x, pos.y, right.x, right.y, GREEN);
 
-	sfw::drawCircle(pos.x, pos.y, 12, 12, GREEN);
+	//drawCircle(L * Circle(Vec2(0, 0), m_facing));
+	sfw::drawCircle(pos.x, pos.y, m_scale.x * 12, 12, GREEN);
 }

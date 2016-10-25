@@ -4,6 +4,7 @@
 #include "SpaceshipLocomotion.h"
 #include "Camera.h"
 #include "sfwdraw.h"
+#include "Shapes.h"
 #include <cmath>
 #include <string>
 #include <time.h>
@@ -28,14 +29,29 @@ int main()
 	int timeStep = 0;
 	Transform tra(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80),
 				cameraTransform;
-	RigidBody rig, sunRig;
+
+
+	// Sun
+	RigidBody sunRig;
+	sunRig.velocity = Vec2(0, 0);
+	sunRig.addTorque(700);
+
+	// Planet
+	RigidBody planetRig;
+	planetRig.velocity = Vec2(0, 0);
+	planetRig.addTorque(2400);
+
+	// Moon
+	RigidBody moonRig;
+	moonRig.velocity = Vec2(0, 0);
+
+	RigidBody rig;
 	SpaceshipLocomotion space;
 	tra.m_position = Vec2(100, 100);
-	sunRig.velocity = Vec2(0, 0);
 	int maxHieght = tra.m_position.y + 3;
 
 	// Tank Transform object
-	Transform tankTransform(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
+	//Transform tankTransform(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
 
 	// Turret Transform object
 
@@ -62,18 +78,21 @@ int main()
 
 	Transform playerTransform(400, 300),
 		ST1(500, 500),
-		ST2(180, 0),
+		//ST2(180, 0),
 		ST3(230, 0),
-		ST4(300, 0);
+		ST4(50, 0);
+
+	playerTransform.m_scale.x = 0;
+	ST1.m_scale = Vec2(10, 0);
+	ST3.m_scale.x = 5;
+	ST4.m_scale.x = 1;
 
 	Camera camera;
 
-	sunRig.addTorque(700);
-
 	//ST1
-	ST2.m_parent = &ST1;//&ST1;
+	//ST2.m_parent = &ST1;//&ST1;
 	ST3.m_parent = &ST1;//&ST2;
-	ST4.m_parent = &ST1;// &ST3;
+	ST4.m_parent = &ST3;// &ST3;
 
 	while (sfw::stepContext())
 	{
@@ -103,6 +122,7 @@ int main()
 		space.update(playerTransform, rig, sfw::getDeltaTime());
 		rig.integrate(playerTransform, sfw::getDeltaTime());
 		sunRig.integrate(ST1, sfw::getDeltaTime());
+		planetRig.integrate(ST3, sfw::getDeltaTime());
 
 		cameraTransform.m_position = lerp(cameraTransform.m_position, 
 											playerTransform.getGlobalPosition(), 
@@ -114,9 +134,11 @@ int main()
 
 		playerTransform.debugDraw(camera);
 		ST1.debugDraw(camera);
-		ST2.debugDraw(camera);
+		//ST2.debugDraw(camera);
 		ST3.debugDraw(camera);
 		ST4.debugDraw(camera);
+
+
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 
@@ -173,6 +195,8 @@ int main()
 
 
 		//tankTransform.debugDraw();
+
+		drawAABB(AABB(500, 500, 50, 100));
 	}
 	sfw::termContext();
 

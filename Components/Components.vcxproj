@@ -159,6 +159,8 @@
     <ClCompile Include="PlanetMotor.cpp" />
     <ClCompile Include="PlayerTransform.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="ShapeDraw.cpp" />
+    <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="SpaceshipLocomotion.cpp" />
     <ClCompile Include="SpaceshipRenderer.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="PlanetMotor.h" />
     <ClInclude Include="PlayerTransform.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="ShapeDraw.h" />
+    <ClInclude Include="Shapes.h" />
     <ClInclude Include="SpaceshipLocomotion.h" />
     <ClInclude Include="SpaceShipRenderer.h" />
     <ClInclude Include="Transform.h" />

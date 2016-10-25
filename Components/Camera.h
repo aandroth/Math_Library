@@ -6,8 +6,6 @@ class Camera
 {
 public:
 
-	Camera();
-
 	Transform cameraTransform;
 	Vec2 screenCenter, screenZoom;
 

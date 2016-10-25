@@ -3,6 +3,8 @@
 #include "Test.h"
 #include "sfwdraw.h"
 #include "Mat3.h"
+#include "Shapes.h"
+#include "ShapeDraw.h"
 
 class Transform
 {
@@ -28,6 +30,5 @@ public:
 	Vec2 getGlobalPosition() const;
 
 	void debugDraw(const Mat3 &T = mat3Identity());
-
 };
 
