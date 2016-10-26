@@ -53,7 +53,6 @@ void SpaceshipLocomotion::update(Transform & trans, RigidBody & rig, float delta
 		doBreakRotate(rig, deltaTime);
 	}
 
-	//std::cout << vertThrust << std::endl;
 	rig.addForce(Vec2(vertThrust*trans.getDirection().x,
 		vertThrust*trans.getDirection().y));
 

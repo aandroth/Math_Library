@@ -226,6 +226,8 @@ int main()
 	assert(rotateByDegrees(90)*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1)) == Mat3(0, -1, 0, 1, 0, 10, 0, 0, 1));
 	assert(rotateByRadians(degreesToRadians(90))*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1)) == Mat3(0, -1, 0, 1, 0, 10, 0, 0, 1));
 
+	assert();
+
 	//Mat2 v = inverse(Mat2(7, 6, 5, 0));
 	//std::cout << v[0] << "\n";
 	//std::cout << v[1] << "\n";

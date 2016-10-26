@@ -48,6 +48,9 @@
     <ClCompile Include="ShapeDraw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Transform.h">
@@ -78,6 +81,9 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="ShapeDraw.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>

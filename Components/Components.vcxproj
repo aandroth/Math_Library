@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PlanetRenderer.cpp" />
     <ClCompile Include="PlanetMotor.cpp" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="PlanetRenderer.h" />
     <ClInclude Include="PlanetMotor.h" />
     <ClInclude Include="PlayerTransform.h" />

@@ -1,4 +1,4 @@
-
+#include "Collision.h"
 #include "Transform.h"
 #include "RigidBody.h"
 #include "SpaceshipLocomotion.h"
@@ -94,6 +94,13 @@ int main()
 	ST3.m_parent = &ST1;//&ST2;
 	ST4.m_parent = &ST3;// &ST3;
 
+
+
+	CollisionData1D collDD = collisionDetection1D(0, 6, 7, 20);
+
+	std::cout << collDD.MTV() << "\n";
+	std::cout << collDD.resultIsCollision() << "\n";
+
 	while (sfw::stepContext())
 	{
 		
@@ -139,8 +146,6 @@ int main()
 		//ST2.debugDraw(camera);
 		ST3.debugDraw(camera);
 		ST4.debugDraw(camera);
-
-
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 

@@ -1,8 +1,5 @@
 #include "Transform.h"
 
-#include <iostream>
-using std::cout;
-
 Transform::Transform(float x, float y, float w, float h, float a)
 {
 	m_position = Vec2(x, y);
