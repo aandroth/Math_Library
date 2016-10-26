@@ -39,15 +39,15 @@ float inner_product(Vec3 a, Vec3 b)
 	return (b.x * a.x) + (b.y * a.y) + (b.z * a.z);
 }
 
-float point_plane_distance(Vec3 point, Plane plane)
+float point_Line_distance(Vec3 point, Line Line)
 {
-	float numerator = (plane.a * point.x + plane.b*point.y + plane.c*point.z + plane.d);
-	float denom = sqrt(plane.a*plane.a + plane.b*plane.b + plane.c*plane.c);
+	float numerator = (Line.a * point.x + Line.b*point.y + Line.c*point.z + Line.d);
+	float denom = sqrt(Line.a*Line.a + Line.b*Line.b + Line.c*Line.c);
 
 	return numerator / denom;
 }
 
-float bezier_curve(float t, Plane plane)
+float bezier_curve(float t, Line Line)
 {
-	return pow((1 - t), 3)*plane.a + 3*pow((1 - t), 2)*plane.b + 3*(1 - t)*t*t*plane.c + pow(t, 3)*plane.d;
+	return pow((1 - t), 3)*Line.a + 3*pow((1 - t), 2)*Line.b + 3*(1 - t)*t*t*Line.c + pow(t, 3)*Line.d;
 }

@@ -59,30 +59,69 @@ Vec2 AABB::max() const
 
 AABB operator*(const Mat3 &MAT3, const AABB &aabb)
 {
+	Vec3 vec3_pos = MAT3 * Vec3(aabb.m_pos.x, aabb.m_pos.y, 1);
 	Vec3 vec3_trans = MAT3 * Vec3(aabb.m_he.x, aabb.m_he.y, 1);
 
-	return AABB(aabb.m_pos.x, aabb.m_pos.y, vec3_trans.x, vec3_trans.y);
+	Vec3 vecArr[4];
+
+	vecArr[0] = MAT3 * Vec3(aabb.m_pos.x - aabb.m_he.x, aabb.m_pos.y - aabb.m_he.y, 1); // br
+	vecArr[1] = MAT3 * Vec3(aabb.m_pos.x - aabb.m_he.x, aabb.m_pos.y + aabb.m_he.y, 1); // tr
+	vecArr[2] = MAT3 * Vec3(aabb.m_pos.x + aabb.m_he.x, aabb.m_pos.y + aabb.m_he.y, 1); // tl
+	vecArr[3] = MAT3 * Vec3(aabb.m_pos.x + aabb.m_he.x, aabb.m_pos.y - aabb.m_he.y, 1); // bl
+
+	for (int ii = 0; ii < 4; ++ii)
+	{
+		vecArr[ii] = MAT3 * vecArr[ii];
+	}
+
+	float max_x = -INFINITY, max_y = -INFINITY, min_x = INFINITY, min_y = INFINITY;
+
+	for (int ii = 0; ii < 4; ++ii)
+	{
+		max_x < vecArr[ii].x ? max_x = vecArr[ii].x : max_x;
+		min_x > vecArr[ii].x ? min_x = vecArr[ii].x : min_x;
+		max_y < vecArr[ii].y ? max_y = vecArr[ii].y : max_y;
+		min_y > vecArr[ii].y ? min_y = vecArr[ii].y : min_y;
+	}
+
+	return AABB(vec3_pos.x, vec3_pos.y, (max_x - min_x) * 0.5, (max_y - min_y) * 0.5);
 }
 
-//Plane::Plane(float pos_x0, float pos_y0, float pos_x1, float pos_y1)
-//{
-//	m_pos0 = Vec2(pos_x0, pos_y0);
-//	m_pos1 = Vec2(pos_x1, pos_y1);
-//}
+Plane::Plane(float centerPos_x, float centerPos_y, float width, float height)
+{
+	pointsArr[0] = Vec2(centerPos_x + (width * 0.5), centerPos_y - (height * 0.5)); // br
+	pointsArr[1] = Vec2(centerPos_x + (width * 0.5), centerPos_y + (height * 0.5)); // tr
+	pointsArr[2] = Vec2(centerPos_x - (width * 0.5), centerPos_y + (height * 0.5)); // tl
+	pointsArr[3] = Vec2(centerPos_x - (width * 0.5), centerPos_y - (height * 0.5)); // bl
+}
 
-//Plane::Plane(Vec2 pos0, Vec2 pos1)
-//{
-//	m_pos0 = pos0;
-//	m_pos1 = pos1;
-//}
-//
-//Plane operator*(const Mat3 &MAT3, const Plane &PLANE)
-//{
-//	Vec3 vec3_trans0 = MAT3 * Vec3(PLANE.m_pos0.x, PLANE.m_pos0.y, 1);
-//	Vec3 vec3_trans1 = MAT3 * Vec3(PLANE.m_pos1.x, PLANE.m_pos1.y, 1);
-//
-//	return Plane(vec3_trans0.x, vec3_trans0.y, vec3_trans1.x, vec3_trans1.y);
-//}
+Plane::Plane(const Plane &plane)
+{
+	pointsArr[0] = plane.pointsArr[0];
+	pointsArr[1] = plane.pointsArr[1];
+	pointsArr[2] = plane.pointsArr[2];
+	pointsArr[3] = plane.pointsArr[3];
+}
+
+Plane::Plane(Vec2 pos0, Vec2 pos1, Vec2 pos2, Vec2 pos3)
+{
+	pointsArr[0] = pos0;
+	pointsArr[1] = pos1;
+	pointsArr[2] = pos2;
+	pointsArr[3] = pos3;
+}
+
+Plane operator*(const Mat3 &MAT3, const Plane &PLANE)
+{
+	Vec3 vecArr[4];
+
+	vecArr[0] = MAT3 * Vec3(PLANE.pointsArr[0].x, PLANE.pointsArr[0].y, 1); // br
+	vecArr[1] = MAT3 * Vec3(PLANE.pointsArr[1].x, PLANE.pointsArr[1].y, 1); // tr
+	vecArr[2] = MAT3 * Vec3(PLANE.pointsArr[2].x, PLANE.pointsArr[2].y, 1); // tl
+	vecArr[3] = MAT3 * Vec3(PLANE.pointsArr[3].x, PLANE.pointsArr[3].y, 1); // bl
+
+	return Plane(vecArr[0].xy(), vecArr[1].xy(), vecArr[2].xy(), vecArr[3].xy());
+}
 
 
 Ray::Ray(float pos_x0, float pos_y0, float pos_x1, float pos_y1)

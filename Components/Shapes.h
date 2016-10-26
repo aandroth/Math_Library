@@ -27,15 +27,16 @@ struct AABB
 };
 AABB operator*(const Mat3 &MAT3, const AABB &aabb);
 
-//struct Plane
-//{
-//	Plane(float pos_x0, float pos_y0, float x1, float y1);
-//	Plane(Vec2 pos0, Vec2 pos1);
-//
-//	Vec2 m_pos0, m_pos1;
-//};
-//
-//Plane operator*(const Mat3 &MAT3, const Plane &PLANE);
+struct Plane
+{
+	Plane(float centerPos_x, float centerPos_y, float width, float height);
+	Plane(Vec2 pos0, Vec2 pos1, Vec2 pos2, Vec2 pos3);
+	Plane(const Plane &plane);
+
+	Vec2 pointsArr[4];
+};
+
+Plane operator*(const Mat3 &MAT3, const Plane &PLANE);
 
 struct Ray
 {

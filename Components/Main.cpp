@@ -47,8 +47,8 @@ int main()
 
 	RigidBody rig;
 	SpaceshipLocomotion space;
-	tra.m_position = Vec2(100, 100);
-	int maxHieght = tra.m_position.y + 3;
+	//tra.m_position = Vec2(100, 100);
+	//int maxHieght = tra.m_position.y + 3;
 
 	// Tank Transform object
 	//Transform tankTransform(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
@@ -82,10 +82,10 @@ int main()
 		ST3(230, 0),
 		ST4(50, 0);
 
-	playerTransform.m_scale.x = 0;
-	ST1.m_scale = Vec2(10, 0);
-	ST3.m_scale.x = 5;
-	ST4.m_scale.x = 1;
+	////playerTransform.m_scale.x = 0;
+	//ST1.m_scale = Vec2(10, 0);
+	//ST3.m_scale.x = 5;
+	//ST4.m_scale.x = 1;
 
 	Camera camera;
 
@@ -121,7 +121,9 @@ int main()
 
 		space.update(playerTransform, rig, sfw::getDeltaTime());
 		rig.integrate(playerTransform, sfw::getDeltaTime());
+		
 		sunRig.integrate(ST1, sfw::getDeltaTime());
+		
 		planetRig.integrate(ST3, sfw::getDeltaTime());
 
 		cameraTransform.m_position = lerp(cameraTransform.m_position, 
@@ -196,7 +198,13 @@ int main()
 
 		//tankTransform.debugDraw();
 
-		drawAABB(AABB(500, 500, 50, 100));
+		//drawAABB(AABB(500, 500, 50, 100));
+		Mat3 mat3 = mat3Identity();
+		mat3.z1 = 500;
+		mat3.z2 = 500;
+
+		//drawPlane(mat3 * rotateByDegrees(playerTransform.m_facing) * Plane(0, 0, 50, 100));
+		drawAABB(mat3 * rotateByDegrees(playerTransform.m_facing*0.5) * AABB(0, 0, 25, 50));
 	}
 	sfw::termContext();
 

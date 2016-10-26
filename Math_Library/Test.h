@@ -8,10 +8,10 @@
 #ifndef TEST_H
 #define TEST_H
 
-struct Plane
+struct Line
 {
 	float a, b, c, d;
-	Plane(float newA, float newB, float newC, float newD)
+	Line(float newA, float newB, float newC, float newD)
 	{
 		a = newA;
 		b = newB;
@@ -26,7 +26,7 @@ Vec2 quadratic(int, int, int);
 float linear_blend(int, int, int);
 float vector_difference(Vec2, Vec2);
 float inner_product(Vec3, Vec3);
-float point_plane_distance(Vec3, Plane);
-float bezier_curve(float, Plane);
+float point_plane_distance(Vec3, Line);
+float bezier_curve(float, Line);
 
 #endif

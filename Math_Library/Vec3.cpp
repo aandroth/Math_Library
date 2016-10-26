@@ -14,6 +14,11 @@ Vec3::Vec3(float newX, float newY, float newZ)
 	z = newZ;
 }
 
+Vec2 Vec3::xy()
+{
+	return Vec2(x, y);
+}
+
 bool operator== (const Vec3 &lhs, const Vec3 &rhs)
 {
 	if (lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z)

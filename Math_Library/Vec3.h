@@ -2,6 +2,7 @@
 
 #include "Flops.h"
 #include <cmath>
+#include "Vec2.h"
 
 #ifndef VEC3_H
 #define VEC3_H
@@ -18,6 +19,8 @@ union Vec3
 
 	float operator[](unsigned idx) const;
 	float &operator[](unsigned idx);
+
+	Vec2 xy();
 };
 
 bool operator== (const Vec3 &lhs, const Vec3 &rhs);
