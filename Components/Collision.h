@@ -2,13 +2,13 @@
 #include <cmath>
 #include "Shapes.h"
 
-float minf(const float &f0, const float &f1)
-{
-	if (f0 < f1)
-		return f0;
-
-	return f1;
-}
+//float minf(const float &f0, const float &f1)
+//{
+//	if (f0 < f1)
+//		return f0;
+//
+//	return f1;
+//}
 
 struct CollisionData1D
 {
@@ -22,8 +22,16 @@ struct CollisionData1D
 CollisionData1D collisionDetection1D(float Amin, float Amax, 
 									 float Bmin, float Bmax);
 
-CollisionData1D collisionDetection1D(float Amin, float Amax, float Adelta,
-									 float Bmin, float Bmax, float Bdelta);
+
+struct CollisionData1DSwept
+{
+	float m_entryTime, m_exitTime;
+	float m_collisionNormal; // Will be 1 or -1
+};
+
+CollisionData1DSwept collisionDetection1DSwept(float Amin, float Amax,
+											   float Bmin, float Bmax, 
+											   float Avel, float Bvel);
 
 struct CollisionData2D
 {
@@ -34,5 +42,16 @@ struct CollisionData2D
 	Vec2 MTV() const;
 };
 
+struct CollisionData2DSwept
+{
+	float m_entryTime, m_exitTime;
+	Vec2 m_collisionNormal;
+
+	bool resultIsCollision(const AABB &A, const AABB &B) const;
+};
+
 CollisionData2D boxCollision(const AABB &A,
-							const AABB &B);
+	const AABB &B);
+
+CollisionData2D planeBoxCollision(const Plane &P,
+								  const AABB &B);

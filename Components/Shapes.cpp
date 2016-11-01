@@ -87,7 +87,41 @@ AABB operator*(const Mat3 &MAT3, const AABB &aabb)
 	return AABB(vec3_pos.x, vec3_pos.y, (max_x - min_x) * 0.5, (max_y - min_y) * 0.5);
 }
 
-Plane::Plane(float centerPos_x, float centerPos_y, float width, float height)
+Plane::Plane()
+{
+	m_he = Vec2(100, 0);
+	m_position = Vec2(0, 0);
+	m_direction = Vec2(1, 0);
+}
+
+Plane::Plane(float posX, float posY, float heX, float heY)
+{
+	m_direction = Vec2(1, 0);
+	m_position.x = posX;
+	m_position.y = posY;
+	m_he.x = heX;
+	m_he.y = heY;
+}
+
+Plane::Plane(Vec2 he, Vec2 pos, Vec2 dir)
+{
+	m_he =		  he;
+	m_position =  pos;
+	m_direction = dir;
+}
+
+Plane operator*(const Mat3 &MAT3, const Plane &PLANE)
+{
+	Plane retVal;
+
+	retVal.m_position  = (MAT3 * Vec3(PLANE.m_position.x,  PLANE.m_position.y, 1)).xy();
+
+	retVal.m_direction = (MAT3 * Vec3(PLANE.m_direction.x, PLANE.m_direction.y, 0)).xy();
+
+	return retVal;
+}
+
+Box::Box(float centerPos_x, float centerPos_y, float width, float height)
 {
 	pointsArr[0] = Vec2(centerPos_x + (width * 0.5), centerPos_y - (height * 0.5)); // br
 	pointsArr[1] = Vec2(centerPos_x + (width * 0.5), centerPos_y + (height * 0.5)); // tr
@@ -95,15 +129,15 @@ Plane::Plane(float centerPos_x, float centerPos_y, float width, float height)
 	pointsArr[3] = Vec2(centerPos_x - (width * 0.5), centerPos_y - (height * 0.5)); // bl
 }
 
-Plane::Plane(const Plane &plane)
+Box::Box(const Box &Box)
 {
-	pointsArr[0] = plane.pointsArr[0];
-	pointsArr[1] = plane.pointsArr[1];
-	pointsArr[2] = plane.pointsArr[2];
-	pointsArr[3] = plane.pointsArr[3];
+	pointsArr[0] = Box.pointsArr[0];
+	pointsArr[1] = Box.pointsArr[1];
+	pointsArr[2] = Box.pointsArr[2];
+	pointsArr[3] = Box.pointsArr[3];
 }
 
-Plane::Plane(Vec2 pos0, Vec2 pos1, Vec2 pos2, Vec2 pos3)
+Box::Box(Vec2 pos0, Vec2 pos1, Vec2 pos2, Vec2 pos3)
 {
 	pointsArr[0] = pos0;
 	pointsArr[1] = pos1;
@@ -111,18 +145,17 @@ Plane::Plane(Vec2 pos0, Vec2 pos1, Vec2 pos2, Vec2 pos3)
 	pointsArr[3] = pos3;
 }
 
-Plane operator*(const Mat3 &MAT3, const Plane &PLANE)
+Box operator*(const Mat3 &MAT3, const Box &BOX)
 {
 	Vec3 vecArr[4];
 
-	vecArr[0] = MAT3 * Vec3(PLANE.pointsArr[0].x, PLANE.pointsArr[0].y, 1); // br
-	vecArr[1] = MAT3 * Vec3(PLANE.pointsArr[1].x, PLANE.pointsArr[1].y, 1); // tr
-	vecArr[2] = MAT3 * Vec3(PLANE.pointsArr[2].x, PLANE.pointsArr[2].y, 1); // tl
-	vecArr[3] = MAT3 * Vec3(PLANE.pointsArr[3].x, PLANE.pointsArr[3].y, 1); // bl
+	vecArr[0] = MAT3 * Vec3(BOX.pointsArr[0].x, BOX.pointsArr[0].y, 1); // br
+	vecArr[1] = MAT3 * Vec3(BOX.pointsArr[1].x, BOX.pointsArr[1].y, 1); // tr
+	vecArr[2] = MAT3 * Vec3(BOX.pointsArr[2].x, BOX.pointsArr[2].y, 1); // tl
+	vecArr[3] = MAT3 * Vec3(BOX.pointsArr[3].x, BOX.pointsArr[3].y, 1); // bl
 
-	return Plane(vecArr[0].xy(), vecArr[1].xy(), vecArr[2].xy(), vecArr[3].xy());
+	return Box(vecArr[0].xy(), vecArr[1].xy(), vecArr[2].xy(), vecArr[3].xy());
 }
-
 
 Ray::Ray(float pos_x0, float pos_y0, float pos_x1, float pos_y1)
 {

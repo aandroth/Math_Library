@@ -93,17 +93,13 @@ int main()
 	//ST2.m_parent = &ST1;//&ST1;
 	ST3.m_parent = &ST1;//&ST2;
 	ST4.m_parent = &ST3;// &ST3;
-
-
-
-	CollisionData1D collDD = collisionDetection1D(0, 6, 7, 20);
-
-	std::cout << collDD.MTV() << "\n";
-	std::cout << collDD.resultIsCollision() << "\n";
-
+	Plane plane;
+	plane.m_position = Vec2(0, 0);
+	plane.m_he = Vec2(200, 200);
+	plane.m_direction = Vec2(1, 0);
+	float planeRot = 0;
 	while (sfw::stepContext())
 	{
-		
 		//rig.integrate(tra, sfw::getDeltaTime());
 		////std::cout << tra.position.y << std::endl;
 		//tra.position = tra.position + rig.velocity * sfw::getDeltaTime();
@@ -126,6 +122,14 @@ int main()
 		//rig.integrate(tankTransform, sfw::getDeltaTime());		
 		
 
+		//if (sfw::getKey('A'))
+		//	planeRot += 1.0;
+		//else if (sfw::getKey('D'))
+		//	planeRot -= 1.0;
+		//Mat3 mat = rotateByDegrees(planeRot);
+		//plane = mat * plane;
+		//drawPlane(plane);
+
 		space.update(playerTransform, rig, sfw::getDeltaTime());
 		rig.integrate(playerTransform, sfw::getDeltaTime());
 		
@@ -134,18 +138,21 @@ int main()
 		planetRig.integrate(ST3, sfw::getDeltaTime());
 
 		cameraTransform.m_position = lerp(cameraTransform.m_position, 
-											playerTransform.getGlobalPosition(), 
-											sfw::getDeltaTime() * 10);
+										  playerTransform.getGlobalPosition(), 
+										  sfw::getDeltaTime() * 10);
 
 		Mat3 proj = translate(500, 500) * scale(1, 1);
 		Mat3 view = inverse(cameraTransform.getGlobalTransform());
 		Mat3 camera = proj * view;
 
 		playerTransform.debugDraw(camera);
-		ST1.debugDraw(camera);
+		//ST1.debugDraw(camera);
 		//ST2.debugDraw(camera);
-		ST3.debugDraw(camera);
-		ST4.debugDraw(camera);
+		//ST3.debugDraw(camera);
+		//ST4.debugDraw(camera);
+
+		planeBoxCollision(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100));
+		
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 

@@ -106,7 +106,7 @@ float dot(const Vec2 &lhs, const Vec2 &rhs)
 // acos(dot(normal(v1), normal(v2)))
 float angleBetween(const Vec2 &lhs, const Vec2 &rhs)
 {
-	return radiansToDegrees(acos((dot(normal(lhs), normal(rhs)))));
+	return radiansToDegrees(acos(dot(normal(lhs), normal(rhs))));
 }
 
 // Find a right angle perpendicular vector (2D only!)

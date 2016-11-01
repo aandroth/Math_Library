@@ -17,7 +17,7 @@ bool operator==(const Circle & lhs, const Circle &rhs);
 
 struct AABB
 {
-	Vec2 m_pos, m_he;
+	Vec2 m_pos, m_vel, m_he;
 
 	AABB(float pos_x, float pos_y, float dim_x, float dim_y);
 	AABB(Vec2 new_pos, Vec2 new_dim);
@@ -29,14 +29,25 @@ AABB operator*(const Mat3 &MAT3, const AABB &aabb);
 
 struct Plane
 {
-	Plane(float centerPos_x, float centerPos_y, float width, float height);
-	Plane(Vec2 pos0, Vec2 pos1, Vec2 pos2, Vec2 pos3);
-	Plane(const Plane &plane);
+	Vec2 m_he, m_position, m_direction;
+
+	Plane();
+	Plane(float posX, float posY, float heX, float heY);
+	Plane(Vec2 he, Vec2 pos, Vec2 dir);
+};
+
+Plane operator*(const Mat3 &MAT3, const Plane &PLANE);
+
+struct Box
+{
+	Box(float centerPos_x, float centerPos_y, float width, float height);
+	Box(Vec2 pos0, Vec2 pos1, Vec2 pos2, Vec2 pos3);
+	Box(const Box &Box);
 
 	Vec2 pointsArr[4];
 };
 
-Plane operator*(const Mat3 &MAT3, const Plane &PLANE);
+Box operator*(const Mat3 &MAT3, const Box &Box);
 
 struct Ray
 {
