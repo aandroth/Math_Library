@@ -91,16 +91,16 @@ Plane::Plane()
 {
 	m_he = Vec2(100, 0);
 	m_position = Vec2(0, 0);
-	m_direction = Vec2(1, 0);
+	m_direction = Vec2(0, 1);
 }
 
 Plane::Plane(float posX, float posY, float heX, float heY)
 {
-	m_direction = Vec2(1, 0);
 	m_position.x = posX;
 	m_position.y = posY;
 	m_he.x = heX;
 	m_he.y = heY;
+	m_direction = perp(Vec2(heX, heY));
 }
 
 Plane::Plane(Vec2 he, Vec2 pos, Vec2 dir)

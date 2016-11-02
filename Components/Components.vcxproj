@@ -162,6 +162,7 @@
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="ShapeDraw.cpp" />
     <ClCompile Include="Shapes.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="SpaceshipLocomotion.cpp" />
     <ClCompile Include="SpaceshipRenderer.cpp" />
     <ClCompile Include="Transform.cpp" />

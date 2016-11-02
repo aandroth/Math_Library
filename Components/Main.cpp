@@ -11,6 +11,8 @@
 #include <iostream>
 #include "Mat3.h"
 #include <vector>
+#include <iostream>
+using std::cout;
 
 enum Tank_State { ROTATE, MOVE };
 
@@ -98,8 +100,44 @@ int main()
 	plane.m_he = Vec2(200, 200);
 	plane.m_direction = Vec2(1, 0);
 	float planeRot = 0;
+
+	AABB aabb(500, 500, 100, 100);
+	Plane p0(500, 700, 200, 100);
+	Plane p1(500, 500, 200, 100);
+	Plane p2(500, 400, 200, 100);
+	Plane p3(500, 200, 200, 100);
+
+	cout << planeBoxCollision(p0, aabb).resultIsCollision() << "\n";
+	cout << planeBoxCollision(p1, aabb).resultIsCollision() << "\n";
+	cout << planeBoxCollision(p2, aabb).resultIsCollision() << "\n";
+	cout << planeBoxCollision(p3, aabb).resultIsCollision() << "\n";
+
+	CollisionData1D c_1D_0 = collisionDetection1D(5, 10, 7, 12);
+	CollisionData1D c_1D_1 = collisionDetection1D(5, 10, 11, 12);
+	CollisionData1D c_1D_2 = collisionDetection1D(5, 10, 1, 2);
+	CollisionData1D c_1D_3 = collisionDetection1D(5, 10, 3, 12);
+
+	CollisionData2DSwept col0 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
+	CollisionData2DSwept col1 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
+	CollisionData2DSwept col2 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
+	CollisionData2DSwept col3 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
+	//CollisionData2D col1 = planeBoxCollision(p1, aabb);
+	//CollisionData2D col2 = planeBoxCollision(p2, aabb);
+	//CollisionData2D col3 = planeBoxCollision(p3, aabb);
+	//cout << col0.m_penetrationDepth << "\n";
+	//cout << col1.m_penetrationDepth << "\n";
+	//cout << col2.m_penetrationDepth << "\n";
+	//cout << col3.m_penetrationDepth << "\n";
+
 	while (sfw::stepContext())
 	{
+		drawAABB(aabb, GREEN);
+		drawPlane(p0, BLUE);
+		drawPlane(p1, YELLOW);
+		drawPlane(p2, RED);
+		drawPlane(p3, BLACK);
+		
+
 		//rig.integrate(tra, sfw::getDeltaTime());
 		////std::cout << tra.position.y << std::endl;
 		//tra.position = tra.position + rig.velocity * sfw::getDeltaTime();

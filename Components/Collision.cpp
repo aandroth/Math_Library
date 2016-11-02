@@ -18,7 +18,7 @@ CollisionData1D collisionDetection1D(float Amin, float Amax,
 {
 	CollisionData1D collisionDataDetection;
 
-	float tl = Amax - Bmin, tr = Bmax - Amin;
+	float tl = Bmax - Amin, tr = Amax - Bmin;
 
 	 if (tl < tr)
 	 {
@@ -103,43 +103,45 @@ bool CollisionData2DSwept::resultIsCollision(const AABB &A, const AABB &B) const
 }
 
 CollisionData2D planeBoxCollision(const Plane &P,
-								  const AABB  &aabb)
+	const AABB  &aabb)
 {
-	// find the projection of a point onto the axis of the plane's normal by using the dot product
-	Vec2 Bmin(INFINITY,   INFINITY),
-		 Bmax(-INFINITY, -INFINITY);
 
-	Vec2 vecArr[4];
+	float pTL = dot(P.m_direction, Vec2(aabb.min().x, aabb.max().y));
+	float pBR = dot(P.m_direction, Vec2(aabb.max().x, aabb.min().y));
+	float pTR = dot(P.m_direction, aabb.min());
+	float pBL = dot(P.m_direction, aabb.max());
 
-	vecArr[0] = Vec2(aabb.m_pos.x - aabb.m_he.x, aabb.m_pos.y - aabb.m_he.y); // br
-	vecArr[1] = Vec2(aabb.m_pos.x - aabb.m_he.x, aabb.m_pos.y + aabb.m_he.y); // tr
-	vecArr[2] = Vec2(aabb.m_pos.x + aabb.m_he.x, aabb.m_pos.y + aabb.m_he.y); // tl
-	vecArr[3] = Vec2(aabb.m_pos.x + aabb.m_he.x, aabb.m_pos.y - aabb.m_he.y); // bl
-
-	float max = -INFINITY, min = INFINITY;
-	Vec2 maxVec, minVec;
-
-	for (int ii = 0; ii < 4; ++ii)
-	{
-		if (max < dot(vecArr[ii] - P.m_position, perp(P.m_direction)))
-		{
-			max = dot(vecArr[ii] - P.m_position, perp(P.m_direction));
-			maxVec = vecArr[ii];
-		}
-		if(min > dot(vecArr[ii] - P.m_position, perp(P.m_direction)))
-		{
-			min = dot(vecArr[ii] - P.m_position, perp(P.m_direction));
-			minVec = vecArr[ii];
-		}
-	}
-
-	CollisionData1D collision = collisionDetection1D(minVec.x, minVec.y, maxVec.x, maxVec.y);
+	float pBmin = fminf(fminf(pTR, pTL), fminf(pBR, pBL));
+	float pPmax = dot(P.m_direction, P.m_position);
 
 	CollisionData2D retVal;
 
-	retVal.m_penetrationDepth = collision.m_penetrationDepth;
-	retVal.m_collisionNormal = Vec2(1, 0) * collision.m_collisionNormal;
+	retVal.m_penetrationDepth = pPmax - pBmin;
+	retVal.m_collisionNormal = P.m_direction;
 
-	return retVal();
+	return retVal;
+}
 
+CollisionData2DSwept planeBoxCollisionSwept(const Plane &P,
+											const Vec2  &pVel,
+											const AABB  &aabb)
+{
+	float pTL = dot(P.m_direction, Vec2(aabb.min().x, aabb.max().y));
+	float pBR = dot(P.m_direction, Vec2(aabb.max().x, aabb.min().y));
+	float pTR = dot(P.m_direction, aabb.min());
+	float pBL = dot(P.m_direction, aabb.max());
+
+	float pPmax = dot(P.m_direction, P.m_position);
+	float pBmin = (fminf(fminf(pTR, pTL), fminf(pBR, pBL)) - pPmax) / dot(P.m_direction, pVel);
+	float pBmax = (fmaxf(fmaxf(pTR, pTL), fmaxf(pBR, pBL)) - pPmax) / dot(P.m_direction, pVel);
+
+	CollisionData2DSwept retVal;
+
+	//retVal.m_penetrationDepth = pPmax - pBmin;
+	//retVal.m_collisionNormal = P.m_direction;
+
+
+	cout << "pBmax: " << pBmax << "\n";
+
+	return retVal;
 }

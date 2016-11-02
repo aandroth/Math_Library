@@ -23,8 +23,8 @@ void drawBox(const Box &BOX, unsigned color)
 
 void drawPlane(const Plane &plane, unsigned color)
 {
-	Vec2 point0 = (rotateByDegrees(angle(Vec2(plane.m_direction.x, plane.m_direction.y))) *  Vec3(plane.m_he.x, plane.m_he.y, 1)).xy();
-	Vec2 point1 = (rotateByDegrees(angle(Vec2(plane.m_direction.x, plane.m_direction.y))) *  Vec3(plane.m_he.x, plane.m_he.y, 1)).xy();
+	Vec2 point0 = plane.m_position + Vec2(perp(plane.m_direction).x * plane.m_he.x, perp(plane.m_direction).y * plane.m_he.y);
+	Vec2 point1 = plane.m_position - Vec2(perp(plane.m_direction).x * plane.m_he.x, perp(plane.m_direction).y * plane.m_he.y);
 
-	sfw::drawLine(plane.m_position.x - point0.x, plane.m_position.y - point0.y, plane.m_position.x + point1.x, plane.m_position.y + point1.y, color);
+	sfw::drawLine(point0.x, point0.y, point1.x, point1.y, color);
 }

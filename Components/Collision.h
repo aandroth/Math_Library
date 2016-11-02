@@ -55,3 +55,7 @@ CollisionData2D boxCollision(const AABB &A,
 
 CollisionData2D planeBoxCollision(const Plane &P,
 								  const AABB &B);
+
+CollisionData2DSwept planeBoxCollisionSwept(const Plane &P,
+											const Vec2 &pVel,
+											const AABB  &aabb);
