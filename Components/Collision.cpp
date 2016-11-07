@@ -103,7 +103,7 @@ bool CollisionData2DSwept::resultIsCollision(const AABB &A, const AABB &B) const
 }
 
 CollisionData2D planeBoxCollision(const Plane &P,
-	const AABB  &aabb)
+								  const AABB  &aabb)
 {
 
 	float pTL = dot(P.m_direction, Vec2(aabb.min().x, aabb.max().y));
@@ -123,8 +123,8 @@ CollisionData2D planeBoxCollision(const Plane &P,
 }
 
 CollisionData2DSwept planeBoxCollisionSwept(const Plane &P,
-											const Vec2  &pVel,
-											const AABB  &aabb)
+											const AABB  &aabb,
+											const Vec2  &pVel)
 {
 	float pTL = dot(P.m_direction, Vec2(aabb.min().x, aabb.max().y));
 	float pBR = dot(P.m_direction, Vec2(aabb.max().x, aabb.min().y));
@@ -137,11 +137,10 @@ CollisionData2DSwept planeBoxCollisionSwept(const Plane &P,
 
 	CollisionData2DSwept retVal;
 
-	//retVal.m_penetrationDepth = pPmax - pBmin;
-	//retVal.m_collisionNormal = P.m_direction;
+	retVal.m_entryTime = pPmax - pBmin;
+	retVal.m_exitTime  = pPmax - pBmax;
+	retVal.m_collisionNormal = P.m_direction;
 
-
-	cout << "pBmax: " << pBmax << "\n";
 
 	return retVal;
 }

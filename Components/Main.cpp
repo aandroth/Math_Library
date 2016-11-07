@@ -117,10 +117,10 @@ int main()
 	CollisionData1D c_1D_2 = collisionDetection1D(5, 10, 1, 2);
 	CollisionData1D c_1D_3 = collisionDetection1D(5, 10, 3, 12);
 
-	CollisionData2DSwept col0 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
-	CollisionData2DSwept col1 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
-	CollisionData2DSwept col2 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
-	CollisionData2DSwept col3 = planeBoxCollisionSwept(p0, Vec2(10, 10), aabb);
+	CollisionData2DSwept col0 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
+	CollisionData2DSwept col1 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
+	CollisionData2DSwept col2 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
+	CollisionData2DSwept col3 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
 	//CollisionData2D col1 = planeBoxCollision(p1, aabb);
 	//CollisionData2D col2 = planeBoxCollision(p2, aabb);
 	//CollisionData2D col3 = planeBoxCollision(p3, aabb);
@@ -128,6 +128,8 @@ int main()
 	//cout << col1.m_penetrationDepth << "\n";
 	//cout << col2.m_penetrationDepth << "\n";
 	//cout << col3.m_penetrationDepth << "\n";
+
+	CollisionData2DSwept pBCS;
 
 	while (sfw::stepContext())
 	{
@@ -137,7 +139,6 @@ int main()
 		drawPlane(p2, RED);
 		drawPlane(p3, BLACK);
 		
-
 		//rig.integrate(tra, sfw::getDeltaTime());
 		////std::cout << tra.position.y << std::endl;
 		//tra.position = tra.position + rig.velocity * sfw::getDeltaTime();
@@ -159,7 +160,6 @@ int main()
 		//space.update(tankTransform, rig, sfw::getDeltaTime());
 		//rig.integrate(tankTransform, sfw::getDeltaTime());		
 		
-
 		//if (sfw::getKey('A'))
 		//	planeRot += 1.0;
 		//else if (sfw::getKey('D'))
@@ -188,9 +188,6 @@ int main()
 		//ST2.debugDraw(camera);
 		//ST3.debugDraw(camera);
 		//ST4.debugDraw(camera);
-
-		planeBoxCollision(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100));
-		
 
 		//timeStep += sfw::getDeltaTime() * 1000;
 
@@ -255,6 +252,18 @@ int main()
 
 		//drawPlane(mat3 * rotateByDegrees(playerTransform.m_facing) * Plane(0, 0, 50, 100));
 		drawAABB(mat3 * rotateByDegrees(playerTransform.m_facing*0.5) * AABB(0, 0, 25, 50));
+
+		pBCS = planeBoxCollisionSwept(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100), Vec2(5.0, -5.0));
+		if (pBCS.resultIsCollision(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100)))
+		{
+			sfw::drawString(font, "resultIsCollision", 0, 1000, 35, 35, 0, ' ');
+		}
+		else //(!pBCS.resultIsCollision)
+		{
+			sfw::drawString(font, "NOT resultIsCollision", 0, 1000, 35, 35, 0, ' ');
+		}
+		sfw::drawString(font, std::to_string(pBCS.m_entryTime).c_str(), 0,  900, 35, 35, 0, ' ');
+		sfw::drawString(font, std::to_string(pBCS.m_exitTime).c_str(), 0,  800, 35, 35, 0, ' ');
 	}
 	sfw::termContext();
 
