@@ -144,3 +144,45 @@ CollisionData2DSwept planeBoxCollisionSwept(const Plane &P,
 
 	return retVal;
 }
+
+
+CollisionData2D HullCollision(const Hull &Hull_0, const Hull &Hull_1)
+{
+	CollisionData2D retVal;
+	retVal.resultIsCollision = false;
+
+	Hull *leastSidesHull, *mostSidesHull;
+
+	retVal.m_penetrationDepth = -INFINITY;
+
+	if (Hull_0.m_size < Hull_1.m_size)
+	{
+		*leastSidesHull = Hull_0;
+		*mostSidesHull = Hull_1;
+	}
+	else
+	{
+		*leastSidesHull = Hull_1;
+		*mostSidesHull  = Hull_0;
+	}
+
+	for (int ii = 0; ii < leastSidesHull->m_size; ++ii)
+	{
+		float min = INFINITY, max = -INFINITY;
+		bool pointIsWithinHull = true;
+		// Get the min and max of the other hull's points on that normal vector
+		for (int jj = 0; jj < mostSidesHull->m_size; ++jj)
+		{
+			float pointAlongNormal = dot(leastSidesHull->m_normals[ii], mostSidesHull->m_vertArray[jj]);
+
+			// Check if all points have no gaps between them
+			min > pointAlongNormal ? pointAlongNormal : min;
+			max < pointAlongNormal ? pointAlongNormal : max;
+		}
+		
+		if (min > dot(leastSidesHull->m_normals[ii], leastSidesHull->m_vertArray[ii]))
+		{
+			pointIsWithinHull = false;
+		}
+	}
+}

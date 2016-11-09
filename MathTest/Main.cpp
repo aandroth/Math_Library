@@ -4,6 +4,10 @@
 #include "sfwdraw.h"
 #include "Mat2.h"
 #include "Mat3.h"
+#include "Hull2.h"
+
+#include <iostream>
+using std::cout;
 
 int main()
 {
@@ -40,13 +44,13 @@ int main()
 	assert(inner_product(Vec3(3, 5, 7), Vec3(1, 1, 1)) == 15);
 	assert(inner_product(Vec3(-1, -7, -4), Vec3(2, 5, 8)) == -69);
 
-	assert(point_plane_distance(Vec3(0, 0, 0), Plane(1, 1, 1, 0)) == 0);
-	assert(point_plane_distance(Vec3(2, 4, 4), Plane(2, 4, 4, 0)) == 6.0);
-	assert(point_plane_distance(Vec3(0, 7, 0), Plane(1, 0, 0, 7)) == 7);
+	assert(point_line_distance(Vec3(0, 0, 0), Line(1, 1, 1, 0)) == 0);
+	assert(point_line_distance(Vec3(2, 4, 4), Line(2, 4, 4, 0)) == 6.0);
+	assert(point_line_distance(Vec3(0, 7, 0), Line(1, 0, 0, 7)) == 7);
 
-	assert(bezier_curve(1.0, Plane(0, 0, 0, 0)) == 0);
-	assert(bezier_curve(7, Plane(1, 3, 5, 7)) == -1901);
-	assert(bezier_curve(1.0, Plane(1, 2, 1, 2)) == 2);
+	assert(bezier_curve(1.0, Line(0, 0, 0, 0)) == 0);
+	assert(bezier_curve(7, Line(1, 3, 5, 7)) == -1901);
+	assert(bezier_curve(1.0, Line(1, 2, 1, 2)) == 2);
 
 	assert((Vec2(0, 7) == Vec2(0, 7)) == true);
 	assert((Vec2(0, 7) == Vec2(0, 2)) == false);
@@ -226,7 +230,20 @@ int main()
 	assert(rotateByDegrees(90)*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1)) == Mat3(0, -1, 0, 1, 0, 10, 0, 0, 1));
 	assert(rotateByRadians(degreesToRadians(90))*(Mat3(1, 0, 10, 0, 1, 0, 0, 0, 1)) == Mat3(0, -1, 0, 1, 0, 10, 0, 0, 1));
 
-	assert();
+	// Hulls
+	Vec2 vertArr[16];
+	for (int ii = 0; ii < 16; ++ii)
+	{
+		vertArr[ii] = Vec2(float(ii), float(-ii));
+	}
+	Mat3 mat3 = mat3Identity();
+	mat3.z1 = 5; mat3.z2 = 10;
+
+	assert(Hull(vertArr, 16) == Hull(vertArr, 16));
+	assert(!(Hull(vertArr, 16) == Hull(vertArr, 15)));
+
+	assert((mat3*(Hull(vertArr, 16))).m_vertArray[0] == (mat3*Vec3(0, 0, 1)).xy());
+	assert((mat3*(Hull(vertArr, 16))).m_vertArray[0] != (mat3*Vec3(10, 5, 1)).xy());
 
 	//Mat2 v = inverse(Mat2(7, 6, 5, 0));
 	//std::cout << v[0] << "\n";
@@ -249,29 +266,22 @@ int main()
 	// Start the GameState loop
 	while (sfw::stepContext())
 	{
-		std::cout << "Begin: \n";
 		start = Mat3(1, 0, 400, 0, 1, 400, 0, 0, 1);
 		oldPos = Vec2(start.z1, start.z2);
 		sfw::drawCircle(start.z1, start.z2, 25, 12, RED);
 		start = start*T0;
 		sfw::drawLine(oldPos.x, oldPos.y, start.z1, start.z2, RED);
 		oldPos = Vec2(start.z1, start.z2);
-		std::cout << "z1: " << start.z1 << "\n";
-		std::cout << "z2: " << start.z2 << "\n";
 
 		sfw::drawCircle(start.z1, start.z2, 25, 12, GREEN);
 		start = start*T1;
 		sfw::drawLine(oldPos.x, oldPos.y, start.z1, start.z2, GREEN);
 		oldPos = Vec2(start.z1, start.z2);
-		std::cout << "z1: " << start.z1 << "\n";
-		std::cout << "z2: " << start.z2 << "\n";
 
 		sfw::drawCircle(start.z1, start.z2, 25, 12, YELLOW);
 		start = start*T2;
 		sfw::drawLine(oldPos.x, oldPos.y, start.z1, start.z2, YELLOW);
 		oldPos = Vec2(start.z1, start.z2);
-		std::cout << "z1: " << start.z1 << "\n";
-		std::cout << "z2: " << start.z2 << "\n";
 		sfw::drawCircle(start.z1, start.z2, 25, 12, BLUE);
 	}
 

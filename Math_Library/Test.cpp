@@ -39,7 +39,7 @@ float inner_product(Vec3 a, Vec3 b)
 	return (b.x * a.x) + (b.y * a.y) + (b.z * a.z);
 }
 
-float point_Line_distance(Vec3 point, Line Line)
+float point_line_distance(Vec3 point, Line Line)
 {
 	float numerator = (Line.a * point.x + Line.b*point.y + Line.c*point.z + Line.d);
 	float denom = sqrt(Line.a*Line.a + Line.b*Line.b + Line.c*Line.c);

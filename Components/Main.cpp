@@ -253,17 +253,17 @@ int main()
 		//drawPlane(mat3 * rotateByDegrees(playerTransform.m_facing) * Plane(0, 0, 50, 100));
 		drawAABB(mat3 * rotateByDegrees(playerTransform.m_facing*0.5) * AABB(0, 0, 25, 50));
 
-		pBCS = planeBoxCollisionSwept(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100), Vec2(5.0, -5.0));
-		if (pBCS.resultIsCollision(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100)))
-		{
-			sfw::drawString(font, "resultIsCollision", 0, 1000, 35, 35, 0, ' ');
-		}
-		else //(!pBCS.resultIsCollision)
-		{
-			sfw::drawString(font, "NOT resultIsCollision", 0, 1000, 35, 35, 0, ' ');
-		}
-		sfw::drawString(font, std::to_string(pBCS.m_entryTime).c_str(), 0,  900, 35, 35, 0, ' ');
-		sfw::drawString(font, std::to_string(pBCS.m_exitTime).c_str(), 0,  800, 35, 35, 0, ' ');
+		//pBCS = planeBoxCollisionSwept(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100), Vec2(5.0, -5.0));
+		//if (pBCS.resultIsCollision(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100)))
+		//{
+		//	sfw::drawString(font, "resultIsCollision", 0, 1000, 35, 35, 0, ' ');
+		//}
+		//else //(!pBCS.resultIsCollision)
+		//{
+		//	sfw::drawString(font, "NOT resultIsCollision", 0, 1000, 35, 35, 0, ' ');
+		//}
+		//sfw::drawString(font, std::to_string(pBCS.m_entryTime).c_str(), 0,  900, 35, 35, 0, ' ');
+		//sfw::drawString(font, std::to_string(pBCS.m_exitTime).c_str(), 0,  800, 35, 35, 0, ' ');
 	}
 	sfw::termContext();
 

@@ -26,7 +26,7 @@ Vec2 quadratic(int, int, int);
 float linear_blend(int, int, int);
 float vector_difference(Vec2, Vec2);
 float inner_product(Vec3, Vec3);
-float point_plane_distance(Vec3, Line);
+float point_line_distance(Vec3, Line);
 float bezier_curve(float, Line);
 
 #endif
