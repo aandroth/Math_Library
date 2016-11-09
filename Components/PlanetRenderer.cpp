@@ -6,7 +6,18 @@ PlanetRenderer::PlanetRenderer(unsigned new_color, float new_radius)
 	m_radius = new_radius;
 }
 
-void PlanetRenderer::draw(Transform &planetTransform) const
+void PlanetRenderer::draw(Mat3 &camMat3, Transform &planetTransform)
 {
-	sfw::drawCircle(planetTransform.getGlobalPosition().x, planetTransform.getGlobalPosition().y, m_radius, 12, m_color);
+	Mat3 planetTrans = camMat3 * planetTransform.getGlobalTransform();
+
+	sfw::drawCircle(planetTrans.z1, planetTrans.z2, m_radius, 12, m_color);
+}
+
+float PlanetRenderer::getRadius()
+{
+	return m_radius;
+}
+void PlanetRenderer::setRadius(float new_radius)
+{
+	m_radius = new_radius;
 }

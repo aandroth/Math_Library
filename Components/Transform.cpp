@@ -46,14 +46,19 @@ Mat3 Transform::getLocalTransform() const
 	return  T * R * S;
 }
 
-Mat3 Transform::getSunTransform() const
+Mat3 Transform::getTransformForChild(float childFacing, Vec2 childPosition) const
 {
-	Mat3 T = translate(m_parent->m_position.x, m_parent->m_position.y);
-	Mat3 S = scale(m_parent->m_scale.x, m_parent->m_scale.y);
-	Mat3 R = rotateByDegrees(m_parent->m_facing * 100001 * (1/determinant(Mat2(m_position, m_parent->m_position))));
+	Mat3 T = translate(m_position.x, m_position.y);
+	Mat3 S = scale(m_scale.x, m_scale.y);
+	Mat3 R = rotateByDegrees(childFacing * 100001 * (1/determinant(Mat2(childPosition, m_position))));
 
 	//cout << "m_position.x: " << (1 / determinant(Mat2(m_position, m_parent->m_position))) << "\n";
 	//cout << "m_position.y: " << R.z2 << "\n";
+
+	if (m_parent != nullptr)
+	{
+		return m_parent->getTransformForChild(m_facing, m_position) * T * R * S;
+	}
 
 	return T * R * S;
 }
@@ -64,7 +69,7 @@ Mat3 Transform::getGlobalTransform() const
 		return getLocalTransform();
 	else
 		//return getSunTransform() * getLocalTransform();
-		return m_parent->getGlobalTransform() * getLocalTransform();
+		return m_parent->getTransformForChild(m_facing, m_position) * getLocalTransform();
 }
 
 Vec2 Transform::getGlobalPosition() const

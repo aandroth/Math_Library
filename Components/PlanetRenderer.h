@@ -8,5 +8,7 @@ public:
 
 	PlanetRenderer(unsigned, float);
 
-	void draw(Transform &planetTransform) const;
+	void PlanetRenderer::draw(Mat3 &camMat3, Transform &planetTransform);
+	float getRadius();
+	void setRadius(float radius);
 };

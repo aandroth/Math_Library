@@ -4,6 +4,7 @@
 #include "SpaceshipLocomotion.h"
 #include "SpaceshipController.h"
 #include "SpaceShipRenderer.h"
+#include "PlanetRenderer.h"
 #include "Camera.h"
 #include "sfwdraw.h"
 #include <cmath>
@@ -29,12 +30,7 @@ int main()
 	float grav = 0;
 	int timeStep = 0;
 	Transform tra(12 * 10 + 100, -8 * 10 + 100, 1, 1, 80);
-	RigidBody rig, sunRig, planet1Rig;
-	SpaceshipLocomotion shipLocomotion;
-	SpaceshipController shipController;
-	SpaceshipRenderer shipRenderer;
 	tra.m_position = Vec2(100, 100);
-	sunRig.velocity = Vec2(0, 0);
 	int maxHieght = tra.m_position.y + 3;
 
 	// Tank Transform object
@@ -63,28 +59,65 @@ int main()
 	float rotate = 0;
 	float move = 0;
 
-	Transform playerTransform(400, 300),
-		ST1(500, 500),
-		ST2(180, 0),
-		ST3(230, 0),
-		ST4(100, 0);
+	Transform playerTransform(400, 300);
 	
+	//Camera
 	Transform cameraTransform;
 	Camera sceneCamera(cameraTransform, Vec2(500, 500), Vec2(1, 1), 10);
 
-	sunRig.addTorque(700);
-	planet1Rig.addTorque(2000);
 
-	//ST1
-	ST2.m_parent = &ST1;//&ST1;
-	ST3.m_parent = &ST1;//&ST2;
+	// Player
+	RigidBody shipRig;
+	SpaceshipLocomotion shipLocomotion;
+	SpaceshipController shipController;
+	SpaceshipRenderer shipRenderer;
+
+	// Sun
+	RigidBody sunRig;
+	sunRig.velocity = Vec2(0, 0);
+	Transform ST1(500, 500);
+	sunRig.addTorque(700);
+	PlanetRenderer SP1(YELLOW, 100);
+	PlanetRenderer SP1_0(RED, 50);
+	
+
+	// Planet0,
+	Transform ST2(380, 30);
+	ST2.m_parent = &ST1;
+	RigidBody planet0Rig;
+	planet0Rig.addTorque(-2000);
+	PlanetRenderer SP2(BLACK, 20);
+	ST1.childList.push_back(ST2);
+
+	// Planet1,
+	Transform ST3(-430, 250);
+	ST3.m_parent = &ST1;
+	RigidBody planet1Rig;
+	planet1Rig.addTorque(1000);
+	PlanetRenderer SP3(BLACK, 50);
+	ST1.childList.push_back(ST3);
+
+	// Moon,
+	Transform ST4(100, 0);
 	ST4.m_parent = &ST3;
+	RigidBody moon0Rig;
+	moon0Rig.addTorque(500);
+	PlanetRenderer SP4(GREEN, 5);
 
 	while (sfw::stepContext())
 	{
+		if (playerTransform.getGlobalPosition().x <= (ST1.getGlobalPosition().x + SP1_0.getRadius()) &&
+			playerTransform.getGlobalPosition().x >= (ST1.getGlobalPosition().x - SP1_0.getRadius()) &&
+			playerTransform.getGlobalPosition().y <= (ST1.getGlobalPosition().y + SP1_0.getRadius()) &&
+			playerTransform.getGlobalPosition().y >= (ST1.getGlobalPosition().y - SP1_0.getRadius()))
+		{
+			playerTransform.childList.insert(playerTransform.childList.begin(), ST1.childList.begin(), ST1.childList.end());
+			ST1.childList.clear();
+		}
+
 		//rig.integrate(tra, sfw::getDeltaTime());
 		////std::cout << tra.position.y << std::endl;
-		//tra.position = tra.position + rig.velocity * sfw::getDeltaTime();
+		//tra.position = tra.position + shipRig.velocity * sfw::getDeltaTime();
 
 		//if (playerTransform.m_position.x <= -30)
 		//	playerTransform.m_position.x = 830;
@@ -100,18 +133,20 @@ int main()
 		//ST3.m_facing = ST3.m_parent->m_facing + 60; //.setDirection(ST3.m_parent->getDirection() + Vec2(1.25, 1.25));
 		//ST4.m_facing = ST4.m_parent->m_facing + 80; //.setDirection(ST4.m_parent->getDirection() + Vec2(1.25, 1.25));
 
-		//space.update(tankTransform, rig, sfw::getDeltaTime());
+		//space.update(tankTransform, shipRig, sfw::getDeltaTime());
 		//rig.integrate(tankTransform, sfw::getDeltaTime());		
 
 		sceneCamera.calculateCameraTransform(playerTransform, sfw::getDeltaTime());
 
 		shipController.update(shipLocomotion);
-		shipLocomotion.update(playerTransform, rig);
+		shipLocomotion.update(playerTransform, shipRig);
 		shipRenderer.render(sceneCamera.getCameraTransform(), playerTransform);
-		rig.integrate(playerTransform, sfw::getDeltaTime());
+		shipRig.integrate(playerTransform, sfw::getDeltaTime());
 		//rig.debugDraw(sceneCamera.getCameraTransform(), playerTransform);
 		sunRig.integrate(ST1, sfw::getDeltaTime());
+		planet0Rig.integrate(ST2, sfw::getDeltaTime());
 		planet1Rig.integrate(ST3, sfw::getDeltaTime());
+		moon0Rig.integrate(ST4, sfw::getDeltaTime());
 
 		//cameraTransform.m_position = lerp(cameraTransform.m_position, 
 		//									playerTransform.getGlobalPosition(), 
@@ -124,15 +159,20 @@ int main()
 		//playerTransform.debugDraw(sceneCamera.getCameraTransform());
 		//ST1.debugDraw(sceneCamera.getCameraTransform());
 		//ST2.debugDraw(sceneCamera.getCameraTransform());
-		ST3.debugDraw(sceneCamera.getCameraTransform());
-		ST4.debugDraw(sceneCamera.getCameraTransform());
+		//ST3.debugDraw(sceneCamera.getCameraTransform());
+		//ST4.debugDraw(sceneCamera.getCameraTransform());
 
-		//timeStep += sfw::getDeltaTime() * 1000;
+		SP1.draw(sceneCamera.getCameraTransform(), ST1);
+		SP1_0.draw(sceneCamera.getCameraTransform(), ST1);
+		SP2.draw(sceneCamera.getCameraTransform(), ST2);
+		SP3.draw(sceneCamera.getCameraTransform(), ST3);
+		SP4.draw(sceneCamera.getCameraTransform(), ST4);
+		std::cout << ST4.getGlobalPosition().x << "\n";
 
 		//tra.debugDraw();
 		//sfw::drawString(font, std::to_string(sfw::getDeltaTime()).c_str(), 400, 600, 48, 48, 0, ' ');
 
-		//space.update(tankTransform, rig, sfw::getDeltaTime());
+		//space.update(tankTransform, shipRig, sfw::getDeltaTime());
 		//rig.integrate(tankTransform, sfw::getDeltaTime());
 		////tra.debugDraw();
 		//playerTransform.debugDraw();

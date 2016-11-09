@@ -3,6 +3,8 @@
 #include "Test.h"
 #include "sfwdraw.h"
 #include "Mat3.h"
+#include <vector>
+using std::vector;
 
 class Transform
 {
@@ -11,6 +13,8 @@ public:
 	Vec2 m_scale;
 	float m_facing, moveBy;
 	Transform * m_parent;
+	unsigned m_color;
+	vector<Transform> childList;
 
 	Mat3 rotateByMat3 = mat3Identity(), translateByMat3 = mat3Identity();
 
@@ -23,7 +27,7 @@ public:
 	void Transform::rotateLocalTransform(float const &R = 0);
 	void Transform::translateLocalTransform(float const &T = 0);
 	Mat3 getLocalTransform() const;
-	Mat3 getSunTransform() const;
+	Mat3 getTransformForChild(float childFacing, Vec2 childPos) const;
 	Mat3 getGlobalTransform() const;
 	Vec2 getGlobalPosition() const;
 
