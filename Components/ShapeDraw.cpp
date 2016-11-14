@@ -23,8 +23,8 @@ void drawBox(const Box &BOX, unsigned color)
 
 void drawPlane(const Plane &plane, unsigned color)
 {
-	Vec2 point0 = plane.m_position + Vec2(perp(plane.m_direction).x * plane.m_he.x, perp(plane.m_direction).y * plane.m_he.y);
-	Vec2 point1 = plane.m_position - Vec2(perp(plane.m_direction).x * plane.m_he.x, perp(plane.m_direction).y * plane.m_he.y);
+	Vec2 point0 = plane.m_position + plane.m_he;
+	Vec2 point1 = plane.m_position - plane.m_he;
 
 	sfw::drawLine(point0.x, point0.y, point1.x, point1.y, color);
 }

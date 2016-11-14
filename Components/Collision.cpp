@@ -102,10 +102,9 @@ bool CollisionData2DSwept::resultIsCollision(const AABB &A, const AABB &B) const
 	return false;
 }
 
-CollisionData2D planeBoxCollision(const Plane &P,
+CollisionData2D planeAABBCollision(const Plane &P,
 								  const AABB  &aabb)
 {
-
 	float pTL = dot(P.m_direction, Vec2(aabb.min().x, aabb.max().y));
 	float pBR = dot(P.m_direction, Vec2(aabb.max().x, aabb.min().y));
 	float pTR = dot(P.m_direction, aabb.min());
@@ -122,7 +121,7 @@ CollisionData2D planeBoxCollision(const Plane &P,
 	return retVal;
 }
 
-CollisionData2DSwept planeBoxCollisionSwept(const Plane &P,
+CollisionData2DSwept planeAABBCollisionSwept(const Plane &P,
 											const AABB  &aabb,
 											const Vec2  &pVel)
 {
@@ -145,15 +144,14 @@ CollisionData2DSwept planeBoxCollisionSwept(const Plane &P,
 	return retVal;
 }
 
-
+/*
 CollisionData2D HullCollision(const Hull &Hull_0, const Hull &Hull_1)
 {
-	CollisionData2D retVal;
-	retVal.resultIsCollision = false;
+	CollisionData2D currColl, bestColl;
 
 	Hull *leastSidesHull, *mostSidesHull;
 
-	retVal.m_penetrationDepth = -INFINITY;
+	float maxPenetrationDepth = -INFINITY;
 
 	if (Hull_0.m_size < Hull_1.m_size)
 	{
@@ -163,12 +161,12 @@ CollisionData2D HullCollision(const Hull &Hull_0, const Hull &Hull_1)
 	else
 	{
 		*leastSidesHull = Hull_1;
-		*mostSidesHull  = Hull_0;
+		*mostSidesHull = Hull_0;
 	}
 
 	for (int ii = 0; ii < leastSidesHull->m_size; ++ii)
 	{
-		float min = INFINITY, max = -INFINITY;
+		float min = INFINITY; // , max = -INFINITY;
 		bool pointIsWithinHull = true;
 		// Get the min and max of the other hull's points on that normal vector
 		for (int jj = 0; jj < mostSidesHull->m_size; ++jj)
@@ -177,12 +175,101 @@ CollisionData2D HullCollision(const Hull &Hull_0, const Hull &Hull_1)
 
 			// Check if all points have no gaps between them
 			min > pointAlongNormal ? pointAlongNormal : min;
-			max < pointAlongNormal ? pointAlongNormal : max;
+			//max < pointAlongNormal ? pointAlongNormal : max;
 		}
-		
-		if (min > dot(leastSidesHull->m_normals[ii], leastSidesHull->m_vertArray[ii]))
+
+		float pointAlongNormal = dot(leastSidesHull->m_normals[ii], leastSidesHull->m_vertArray[ii]);
+		if (currColl.m_penetrationDepth < (pointAlongNormal - min))
 		{
-			pointIsWithinHull = false;
+			maxPenetrationDepth = pointAlongNormal - min;
+			bestColl = currColl;
 		}
 	}
+
+	bestColl.m_penetrationDepth = maxPenetrationDepth;
+}
+*/
+
+CollisionData1D HullCollision(const Hull &Hull_0, const Hull &Hull_1)
+{
+	CollisionData1D currColl, bestColl;
+	bestColl.m_penetrationDepth = INFINITY;
+	float maxPenetrationDepth = -INFINITY;
+
+	Vec2 allNormalsArr[32];
+
+	for (int ii = 0; ii < Hull_0.m_size; ++ii)
+	{
+		allNormalsArr[ii] = Hull_0.m_normals[ii];
+	}	
+	for (int ii = Hull_0.m_size, jj = 0; jj < Hull_1.m_size; ++ii, ++jj)
+	{
+		allNormalsArr[ii] = Hull_1.m_normals[jj];
+	}
+
+	for (int ii = 0; ii < Hull_0.m_size + Hull_1.m_size; ++ii)
+	{
+		float aMin = INFINITY, aMax = -INFINITY, bMin = INFINITY, bMax = -INFINITY; 
+		for (int jj = 0; jj < Hull_0.m_size; ++jj)
+		{
+			float dotProduct_0 = dot(allNormalsArr[ii], Hull_0.m_vertArray[jj]);
+			aMin > dotProduct_0 ? dotProduct_0 : aMin;
+			aMax < dotProduct_0 ? dotProduct_0 : aMax;
+		}
+		for (int jj = 0; jj < Hull_1.m_size; ++jj)
+		{
+			float dotProduct_1 = dot(allNormalsArr[ii], Hull_1.m_vertArray[jj]);
+			bMin > dotProduct_1 ? dotProduct_1 : bMin;
+			bMax < dotProduct_1 ? dotProduct_1 : bMax;
+		}
+
+		currColl = collisionDetection1D(aMin, aMax, bMin, bMax);
+		if (bestColl.m_penetrationDepth > currColl.m_penetrationDepth)
+		{
+			bestColl = currColl;
+		}
+	}
+	return bestColl;
+}
+
+CollisionData1DSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, const Vec2 Vel_0, const Vec2 Vel_1)
+{
+	CollisionData1DSwept currColl, bestColl;
+	bestColl.m_entryTime = INFINITY;
+	float maxPenetrationDepth = -INFINITY;
+
+	Vec2 allNormalsArr[32];
+
+	for (int ii = 0; ii < Hull_0.m_size; ++ii)
+	{
+		allNormalsArr[ii] = Hull_0.m_normals[ii];
+	}
+	for (int ii = Hull_0.m_size, jj = 0; jj < Hull_1.m_size; ++ii, ++jj)
+	{
+		allNormalsArr[ii] = Hull_1.m_normals[jj];
+	}
+
+	for (int ii = 0; ii < Hull_0.m_size + Hull_1.m_size; ++ii)
+	{
+		float aMin = INFINITY, aMax = -INFINITY, bMin = INFINITY, bMax = -INFINITY;
+		for (int jj = 0; jj < Hull_0.m_size; ++jj)
+		{
+			float dotProduct_0 = dot(allNormalsArr[ii], Hull_0.m_vertArray[jj]);
+			aMin > dotProduct_0 ? dotProduct_0 : aMin;
+			aMax < dotProduct_0 ? dotProduct_0 : aMax;
+		}
+		for (int jj = 0; jj < Hull_1.m_size; ++jj)
+		{
+			float dotProduct_1 = dot(allNormalsArr[ii], Hull_1.m_vertArray[jj]);
+			bMin > dotProduct_1 ? dotProduct_1 : bMin;
+			bMax < dotProduct_1 ? dotProduct_1 : bMax;
+		}
+
+		currColl = collisionDetection1DSwept(aMin, aMax, bMin, bMax, dot(allNormalsArr[ii], Vel_0), dot(allNormalsArr[ii], Vel_1));
+		if (bestColl.m_entryTime > currColl.m_entryTime)
+		{
+			bestColl = currColl;
+		}
+	}
+	return bestColl;
 }

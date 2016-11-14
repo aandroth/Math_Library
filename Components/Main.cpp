@@ -13,14 +13,16 @@
 #include <vector>
 #include <iostream>
 using std::cout;
-
+unsigned font;
 enum Tank_State { ROTATE, MOVE };
+
+void drawOutputTextForPlane(const Plane &p, int height, Vec2 aabbVel, const AABB &ab, unsigned color);
 
 int main()
 {
+	//font = sfw::loadTextureMap("./res/tonc_font.png", 16, 6);
 	// Create the window
-	sfw::initContext(1000, 1000, "NSFW Draw");
-	unsigned int font = sfw::loadTextureMap("./res/tonc_font.png", 16, 6);
+	sfw::initContext(1000, 1000, "Testbed");
 
 	float t = 0, spacer = 0;
 	float b = 0.5, m = 0.5, e = 1.0f, tightness = 0.1;
@@ -33,22 +35,22 @@ int main()
 				cameraTransform;
 
 
-	// Sun
-	RigidBody sunRig;
-	sunRig.velocity = Vec2(0, 0);
-	sunRig.addTorque(700);
+	//// Sun
+	//RigidBody sunRig;
+	//sunRig.velocity = Vec2(0, 0);
+	//sunRig.addTorque(700);
 
-	// Planet
-	RigidBody planetRig;
-	planetRig.velocity = Vec2(0, 0);
-	planetRig.addTorque(2400);
+	//// Planet
+	//RigidBody planetRig;
+	//planetRig.velocity = Vec2(0, 0);
+	//planetRig.addTorque(2400);
 
-	// Moon
-	RigidBody moonRig;
-	moonRig.velocity = Vec2(0, 0);
+	//// Moon
+	//RigidBody moonRig;
+	//moonRig.velocity = Vec2(0, 0);
 
-	RigidBody rig;
-	SpaceshipLocomotion space;
+	//RigidBody rig;
+	//SpaceshipLocomotion space;
 	//tra.m_position = Vec2(100, 100);
 	//int maxHieght = tra.m_position.y + 3;
 
@@ -107,20 +109,20 @@ int main()
 	Plane p2(500, 400, 200, 100);
 	Plane p3(500, 200, 200, 100);
 
-	cout << planeBoxCollision(p0, aabb).resultIsCollision() << "\n";
-	cout << planeBoxCollision(p1, aabb).resultIsCollision() << "\n";
-	cout << planeBoxCollision(p2, aabb).resultIsCollision() << "\n";
-	cout << planeBoxCollision(p3, aabb).resultIsCollision() << "\n";
+	cout << planeAABBCollision(p0, aabb).resultIsCollision() << "\n";
+	cout << planeAABBCollision(p1, aabb).resultIsCollision() << "\n";
+	cout << planeAABBCollision(p2, aabb).resultIsCollision() << "\n";
+	cout << planeAABBCollision(p3, aabb).resultIsCollision() << "\n";
 
 	CollisionData1D c_1D_0 = collisionDetection1D(5, 10, 7, 12);
 	CollisionData1D c_1D_1 = collisionDetection1D(5, 10, 11, 12);
 	CollisionData1D c_1D_2 = collisionDetection1D(5, 10, 1, 2);
 	CollisionData1D c_1D_3 = collisionDetection1D(5, 10, 3, 12);
 
-	CollisionData2DSwept col0 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
-	CollisionData2DSwept col1 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
-	CollisionData2DSwept col2 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
-	CollisionData2DSwept col3 = planeBoxCollisionSwept(p0, aabb, Vec2(10, 10));
+	CollisionData2DSwept col0 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
+	CollisionData2DSwept col1 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
+	CollisionData2DSwept col2 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
+	CollisionData2DSwept col3 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
 	//CollisionData2D col1 = planeBoxCollision(p1, aabb);
 	//CollisionData2D col2 = planeBoxCollision(p2, aabb);
 	//CollisionData2D col3 = planeBoxCollision(p3, aabb);
@@ -130,14 +132,34 @@ int main()
 	//cout << col3.m_penetrationDepth << "\n";
 
 	CollisionData2DSwept pBCS;
+	Vec2 aabbVel = Vec2(0, 50);
+
+	cout << p0.m_direction.x << ", " << p0.m_direction.y << "\n";
 
 	while (sfw::stepContext())
 	{
+		if (sfw::getKey('W'))
+			aabb.m_pos.y += 10;
+		else if (sfw::getKey('S'))
+			aabb.m_pos.y -= 10;
+		if (sfw::getKey('D'))
+			aabb.m_pos.x += 10;
+		else if (sfw::getKey('A'))
+			aabb.m_pos.x -= 10;
+
 		drawAABB(aabb, GREEN);
+		drawAABB(AABB(aabb.m_pos.x+aabbVel.x, aabb.m_pos.y+aabbVel.y, aabb.m_he.x, aabb.m_he.y), 0x07FF07);
 		drawPlane(p0, BLUE);
 		drawPlane(p1, YELLOW);
 		drawPlane(p2, RED);
 		drawPlane(p3, BLACK);
+
+		//drawPlane(Plane(p0.m_position.x, p0.m_position.y, p0.m_direction.x*100, p0.m_direction.y*100), RED);
+
+		drawOutputTextForPlane(p0, 1000, aabbVel, aabb, BLUE);
+		drawOutputTextForPlane(p1,  950, aabbVel, aabb, YELLOW);
+		drawOutputTextForPlane(p2,  900, aabbVel, aabb, RED);
+		drawOutputTextForPlane(p3,  850, aabbVel, aabb, BLACK);
 		
 		//rig.integrate(tra, sfw::getDeltaTime());
 		////std::cout << tra.position.y << std::endl;
@@ -168,22 +190,22 @@ int main()
 		//plane = mat * plane;
 		//drawPlane(plane);
 
-		space.update(playerTransform, rig, sfw::getDeltaTime());
-		rig.integrate(playerTransform, sfw::getDeltaTime());
-		
-		sunRig.integrate(ST1, sfw::getDeltaTime());
-		
-		planetRig.integrate(ST3, sfw::getDeltaTime());
+		//space.update(playerTransform, rig, sfw::getDeltaTime());
+		//rig.integrate(playerTransform, sfw::getDeltaTime());
+		//
+		//sunRig.integrate(ST1, sfw::getDeltaTime());
+		//
+		//planetRig.integrate(ST3, sfw::getDeltaTime());
 
-		cameraTransform.m_position = lerp(cameraTransform.m_position, 
-										  playerTransform.getGlobalPosition(), 
-										  sfw::getDeltaTime() * 10);
+		//cameraTransform.m_position = lerp(cameraTransform.m_position, 
+		//								  playerTransform.getGlobalPosition(), 
+		//								  sfw::getDeltaTime() * 10);
 
 		Mat3 proj = translate(500, 500) * scale(1, 1);
 		Mat3 view = inverse(cameraTransform.getGlobalTransform());
 		Mat3 camera = proj * view;
 
-		playerTransform.debugDraw(camera);
+		//playerTransform.debugDraw(camera);
 		//ST1.debugDraw(camera);
 		//ST2.debugDraw(camera);
 		//ST3.debugDraw(camera);
@@ -251,7 +273,8 @@ int main()
 		mat3.z2 = 500;
 
 		//drawPlane(mat3 * rotateByDegrees(playerTransform.m_facing) * Plane(0, 0, 50, 100));
-		drawAABB(mat3 * rotateByDegrees(playerTransform.m_facing*0.5) * AABB(0, 0, 25, 50));
+
+		drawAABB(mat3 * rotateByDegrees(playerTransform.m_facing*0.5) * aabb);
 
 		//pBCS = planeBoxCollisionSwept(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100), Vec2(5.0, -5.0));
 		//if (pBCS.resultIsCollision(Plane(500, 500, 100, 0), AABB(500, 500, 100, 100)))
@@ -268,4 +291,31 @@ int main()
 	sfw::termContext();
 
 	return 0;
+}
+
+
+void drawOutputTextForPlane(const Plane &p, int height, Vec2 aabbVel, const AABB &ab, unsigned color)
+{
+	CollisionData2D coll2D = planeAABBCollision(p, ab);
+	std::string collisionResultText;
+	sfw::drawCircle(10, height - 10, 10, 16, color);
+	if (coll2D.resultIsCollision())
+	{
+		sfw::drawCircle(30, height - 10, 10, 16, GREEN);
+	}
+	else
+	{
+		sfw::drawCircle(30, height - 10, 10, 16, RED);
+	}
+
+	CollisionData2DSwept coll2DSwept = planeAABBCollisionSwept(p, ab, aabbVel);
+	if (coll2DSwept.resultIsCollision())
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, GREEN);
+	}
+	else
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, RED);
+	}
+	//sfw::drawString(font, collisionResultText.c_str(), 0, 1000, 35, 35, 0, color);
 }
