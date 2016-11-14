@@ -23,12 +23,12 @@ CollisionData1D collisionDetection1D(float Amin, float Amax,
 	 if (tl < tr)
 	 {
 		 collisionDataDetection.m_penetrationDepth = tl;
-		 collisionDataDetection.m_collisionNormal = -1;
+		 collisionDataDetection.m_collisionNormal  = -1;
 	 }
 	 else
 	 {
 		 collisionDataDetection.m_penetrationDepth = tr;
-		 collisionDataDetection.m_collisionNormal = 1;
+		 collisionDataDetection.m_collisionNormal  = 1;
 	 }
 
 	return collisionDataDetection;

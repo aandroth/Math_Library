@@ -9,7 +9,7 @@
 //What if we could code real life, but then power abusers.
 //What if DC makes a good movie, but then threatens to make a horrible sequel.
 //What if FTL is discovered, but then Earth must be destroyed.
-//What if gravity's cause is found, but then we find that we're running out.
+//What if gravity's cause is found, but then we learn that we're running out.
 //What if a hero fails to save the world, but then a group of monsters take up his cause.
 //What if things are normal, but then the world begins to shrink.
 //What if a giant space-worm starts heading towards Earth to eat it, but then we create a giant space-bird-robot to eat the worm.
