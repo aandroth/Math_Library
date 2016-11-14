@@ -100,14 +100,14 @@ Plane::Plane(float posX, float posY, float heX, float heY)
 	m_position.y = posY;
 	m_he.x = heX;
 	m_he.y = heY;
-	m_direction = perp(Vec2(heX, heY));
+	m_direction = perp(normal(Vec2(heX, heY)));
 }
 
 Plane::Plane(Vec2 he, Vec2 pos, Vec2 dir)
 {
 	m_he =		  he;
 	m_position =  pos;
-	m_direction = dir;
+	m_direction = normal(dir);
 }
 
 Plane operator*(const Mat3 &MAT3, const Plane &PLANE)
@@ -116,7 +116,7 @@ Plane operator*(const Mat3 &MAT3, const Plane &PLANE)
 
 	retVal.m_position  = (MAT3 * Vec3(PLANE.m_position.x,  PLANE.m_position.y, 1)).xy();
 
-	retVal.m_direction = (MAT3 * Vec3(PLANE.m_direction.x, PLANE.m_direction.y, 0)).xy();
+	retVal.m_direction = normal((MAT3 * Vec3(PLANE.m_direction.x, PLANE.m_direction.y, 0)).xy());
 
 	return retVal;
 }
