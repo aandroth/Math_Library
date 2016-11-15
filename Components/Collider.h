@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Shapes.h"
 #include "Collision.h"
 #include "ShapeDraw.h"
@@ -16,3 +17,9 @@ public:
 
 CollisionData ColliderCollision(const Transform &TA, const Collider &CA,
 								  const Transform &TB, const Collider &CB);
+CollisionData StaticResolution(Transform & TA, RigidBody & RA, Collider CA,
+							   Transform & TB, Collider CB, float bounciness);
+
+
+CollisionData DynamicResolution(Transform & TA, RigidBody & RA, Collider CA,
+								Transform & TB, RigidBody & RB, Collider CB, float bounciness);

@@ -56,3 +56,63 @@ CollisionData ColliderCollision(const Transform &TA, const Collider &CA,
 
 	return collData;
 }
+
+
+// NOT COMPLETE /////////////////////////////////////////////////////////
+CollisionData StaticResolution(Transform & TA, RigidBody & RA, Collider CA,
+								Transform & TB, Collider CB, float bounciness)
+{
+	CollisionData collData = ColliderCollision(TA, CA, TB, CB);
+
+	Vec2 A_initVel = RA.getVelocity(), A_finVel;
+
+	float  A_mass = RA.mass, bounce = bounciness;
+
+	if (collData.resultIsCollision())
+	{
+		Vec2 MTV = collData.m_collisionNormal * collData.m_penetrationDepth;
+
+		float am = magnitude(RA.velocity * RA.mass);
+
+		TA.m_position -= MTV;
+
+		A_finVel = (A_initVel * A_mass + B_initVel * B_mass + ((A_initVel - B_initVel) * -bounce) * B_mass / (A_mass * B_mass));
+
+		RA.velocity = A_finVel;
+	}
+
+	return collData;
+}
+
+
+CollisionData DynamicResolution(Transform & TA, RigidBody & RA, Collider CA,
+								Transform & TB, RigidBody & RB, Collider CB, float bounciness)
+{
+	CollisionData collData = ColliderCollision(TA, CA, TB, CB);
+
+	Vec2 A_initVel = RA.getVelocity(), A_finVel,
+		B_initVel = RB.getVelocity(), B_finVel;
+
+	float  A_mass = RA.mass, B_mass = RB.mass, bounce = bounciness;
+
+	if (collData.resultIsCollision())
+	{
+		Vec2 MTV = collData.m_collisionNormal * collData.m_penetrationDepth;
+
+		float am = magnitude(RA.velocity * RA.mass),
+			bm = magnitude(RB.velocity * RB.mass),
+			cm = am + bm;
+
+		TA.m_position -= MTV * (1 - (am / cm));
+		TB.m_position += MTV * (1 - (bm / cm));
+
+		A_finVel = (A_initVel * A_mass + B_initVel * B_mass + ((A_initVel - B_initVel) * -bounce) * B_mass / (A_mass * B_mass));
+
+		B_finVel = ((A_initVel - B_initVel) * bounce) + A_finVel;
+
+		RA.velocity = A_finVel;
+		RB.velocity = B_finVel;
+	}
+
+	return collData;
+}

@@ -110,10 +110,10 @@ int main()
 	Plane p2(500, 400, 200, 100);
 	Plane p3(500, 200, 200, 100);
 
-	cout << planeAABBCollision(p0, aabb).resultIsCollision() << "\n";
-	cout << planeAABBCollision(p1, aabb).resultIsCollision() << "\n";
-	cout << planeAABBCollision(p2, aabb).resultIsCollision() << "\n";
-	cout << planeAABBCollision(p3, aabb).resultIsCollision() << "\n";
+	//cout << planeAABBCollision(p0, aabb).resultIsCollision() << "\n";
+	//cout << planeAABBCollision(p1, aabb).resultIsCollision() << "\n";
+	//cout << planeAABBCollision(p2, aabb).resultIsCollision() << "\n";
+	//cout << planeAABBCollision(p3, aabb).resultIsCollision() << "\n";
 
 	CollisionData1D c_1D_0 = collisionDetection1D(5, 10, 7, 12);
 	CollisionData1D c_1D_1 = collisionDetection1D(5, 10, 11, 12);

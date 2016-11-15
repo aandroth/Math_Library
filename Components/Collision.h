@@ -3,7 +3,6 @@
 #include "Shapes.h"
 #include "Transform.h"
 #include "RigidBody.h"
-#include "Collider.h"
 
 
 struct CollisionData1D
@@ -42,6 +41,7 @@ struct CollisionDataSwept
 {
 	float m_entryTime, m_exitTime;
 	Vec2 m_collisionNormal;
+	bool collides;
 
 	bool resultIsCollision(const AABB &A, const AABB &B) const;
 };
@@ -63,8 +63,3 @@ CollisionData HullCollision(const Hull &Hull_0, const Hull &Hull_1);
 
 CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, const Vec2, const Vec2);
 
-CollisionData StaticResolution(Transform & TA, RigidBody & RA, Collider CA,
-							   Transform & TB, Collider CB);
-
-CollisionData DynamicResolution(Transform & TA, RigidBody & RA, Collider CA,
-								Transform & TB, RigidBody & RB, Collider CB, float bounciness);

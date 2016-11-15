@@ -89,24 +89,39 @@ CollisionDataSwept aabbCollisionSwept(const AABB &A, Vec2 A_vel,
 {
 	CollisionDataSwept retVal;
 
-
+	// In case the objects have no velocity
 	CollisionData1D collisionX = collisionDetection1D(A.min().x, A.max().x, B.min().x, B.max().x),
-					collisionY = collisionDetection1D(A.min().y, A.max().y, B.min().y, B.max().y);
+		collisionY = collisionDetection1D(A.min().y, A.max().y, B.min().y, B.max().y);
 
+	// Swept results
 	CollisionDataSwept1D collisionX_swept = collisionDetectionSwept1D(A.min().x, A.max().x, B.min().x, B.max().x, A_vel.x, B_vel.x),
-						 collisionY_swept = collisionDetectionSwept1D(A.min().y, A.max().y, B.min().y, B.max().y, A_vel.y, B_vel.y);
+		collisionY_swept = collisionDetectionSwept1D(A.min().y, A.max().y, B.min().y, B.max().y, A_vel.y, B_vel.y);
 
+	bool xSwept = ((A_vel.x - B_vel.x) != 0);
+	bool ySwept = ((A_vel.y - B_vel.y) != 0);
 
-
-	if (collisionX.MTV() < collisionY.MTV())
+	if (collisionY_swept.m_entryTime < collisionX_swept.m_entryTime || xSwept && !ySwept)
 	{
-		retVal.m_entryTime = collisionX.m_penetrationDepth;
-		retVal.m_collisionNormal = Vec2(1, 0) * collisionX.m_collisionNormal;
+		retVal.m_collisionNormal = Vec2(1, 0) * collisionX_swept.m_collisionNormal;
+		retVal.m_entryTime = collisionX_swept.m_entryTime;
+
+		retVal.collides = ySwept || collisionY.resultIsCollision();
 	}
-	else// (collisionX.MTV() >= collisionY.MTV())
+	else if (ySwept)
 	{
-		retVal.m_penetrationDepth = collisionY.m_penetrationDepth;
-		retVal.m_collisionNormal = Vec2(1, 0) * collisionY.m_collisionNormal;
+		retVal.m_collisionNormal = Vec2(1, 0) * collisionY_swept.m_collisionNormal;
+		retVal.m_entryTime = collisionY_swept.m_entryTime;
+
+		retVal.collides = xSwept || collisionX.resultIsCollision();
+	}
+
+	if (collisionY_swept.m_exitTime < collisionX_swept.m_exitTime || ySwept && !xSwept)
+	{
+		retVal.m_exitTime = collisionY_swept.m_exitTime;
+	}
+	else if (xSwept)
+	{
+		retVal.m_exitTime = collisionX_swept.m_exitTime;
 	}
 
 	return retVal;
@@ -120,8 +135,7 @@ bool CollisionDataSwept::resultIsCollision(const AABB &A, const AABB &B) const
 	CollisionDataSwept1D collisionX = collisionDetectionSwept1D(A.min().x, A.max().x, B.min().x, B.max().x, A.m_vel.x, B.m_vel.x),
 						 collisionY = collisionDetectionSwept1D(A.min().y, A.max().y, B.min().y, B.max().y, A.m_vel.y, B.m_vel.y);
 
-	if (collisionX.m_entryTime > collisionX.m_exitTime ||
-		collisionY.m_entryTime > collisionY.m_exitTime)
+	if (collisionX.m_entryTime > collisionX.m_exitTime || collisionY.m_entryTime > collisionY.m_exitTime)
 	{
 		return true;
 	}
@@ -318,45 +332,4 @@ CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, co
 		}
 	}
 	return bestColl;
-}
-
-// NOT COMPLETE /////////////////////////////////////////////////////////
-CollisionData StaticResolution(Transform & TA, RigidBody & RA, Collider CA,
-								Transform & TB, Collider CB)
-{
-	CollisionData collData = ColliderCollision(TA, CA, TB, CB);
-
-	return collData;
-}
-
-CollisionData DynamicResolution(Transform & TA, RigidBody & RA, Collider CA,
-								Transform & TB, RigidBody & RB, Collider CB, float bounciness)
-{
-	CollisionData collData = ColliderCollision(TA, CA, TB, CB);
-
-	Vec2 A_initVel = RA.getVelocity(), A_finVel,
-		 B_initVel = RB.getVelocity(), B_finVel;
-
-	float  A_mass = RA.mass, B_mass = RB.mass, bounce = bounciness;
-
-	if (collData.resultIsCollision())
-	{
-		Vec2 MTV = collData.m_collisionNormal * collData.m_penetrationDepth;
-
-		float am = magnitude(RA.velocity * RA.mass),
-			  bm = magnitude(RB.velocity * RB.mass),
-			  cm = am + bm;
-
-		TA.m_position -= MTV * (1- (am / cm));
-		TB.m_position += MTV * (1- (bm / cm));
-
-		A_finVel = (A_initVel * A_mass + B_initVel * B_mass + ((A_initVel - B_initVel) * -bounce) * B_mass / (A_mass * B_mass));
-
-		B_finVel = ((A_initVel - B_initVel) * bounce) + A_finVel;
-
-		RA.velocity = A_finVel;
-		RB.velocity = B_finVel;
-	}
-
-	return collData;
 }

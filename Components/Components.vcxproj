@@ -94,7 +94,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\aaron.andrews\Documents\Visual Studio 2015\Projects\Math_Library\MathTest;$(SolutionDir)$(Configuration)\;C:\Users\aaron.andrews\Documents\Visual Studio 2015\Projects\Math_Library\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Aquin\Source\Repos\Math_Library\MathTest;C:\Users\aaron.andrews\Documents\Visual Studio 2015\Projects\Math_Library\MathTest;$(SolutionDir)$(Configuration)\;C:\Users\aaron.andrews\Documents\Visual Studio 2015\Projects\Math_Library\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Math_Library.lib;sfw_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

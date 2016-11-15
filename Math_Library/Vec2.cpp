@@ -132,6 +132,11 @@ Vec2 fromAngle(float a)
 	return v;
 }
 
+Vec2 reflection(const Vec2 &v)
+{
+
+}
+
 Vec2 lerp(const Vec2 start, const Vec2 end, const float alpha)
 {
 	return Vec2((start.x + alpha *(end.x - start.x)),
