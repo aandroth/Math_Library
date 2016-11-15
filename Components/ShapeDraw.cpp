@@ -28,3 +28,18 @@ void drawPlane(const Plane &plane, unsigned color)
 
 	sfw::drawLine(point0.x, point0.y, point1.x, point1.y, color);
 }
+
+void drawHull(const Hull &hull, unsigned color)
+{
+	for (int ii = 0; ii < hull.m_size - 1; ++ii)
+	{
+		Vec2 currPoint = hull.m_vertArray[ii];
+		Vec2 nextPoint = hull.m_vertArray[ii + 1];
+		sfw::drawLine(currPoint.x, currPoint.y, nextPoint.x, nextPoint.y, color);
+	}
+
+	Vec2 lastPoint = hull.m_vertArray[(hull.m_size - 1)];
+	Vec2 origPoint = hull.m_vertArray[0];
+
+	sfw::drawLine(lastPoint.x, lastPoint.y, origPoint.x, origPoint.y, color);
+}

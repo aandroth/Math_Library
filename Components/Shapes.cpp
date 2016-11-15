@@ -35,6 +35,13 @@ bool operator== (const Circle &lhs, const Circle &rhs)
 	return ((floatsAlmostEqual(lhs.m_radius, rhs.m_radius)) && (lhs.m_pos == rhs.m_pos));
 }
 
+AABB::AABB()
+{
+	m_pos = Vec2(0, 0);
+	m_he =  Vec2(1, 1);
+	m_vel = Vec2(0, 0);
+}
+
 AABB::AABB(float pos_x, float pos_y, float he_x, float he_y)
 {
 	m_pos = Vec2(pos_x, pos_y);

@@ -19,6 +19,7 @@ struct AABB
 {
 	Vec2 m_pos, m_vel, m_he;
 
+	AABB();
 	AABB(float pos_x, float pos_y, float dim_x, float dim_y);
 	AABB(Vec2 new_pos, Vec2 new_dim);
 

@@ -1,14 +1,10 @@
 #pragma once
 #include <cmath>
 #include "Shapes.h"
+#include "Transform.h"
+#include "RigidBody.h"
+#include "Collider.h"
 
-//float minf(const float &f0, const float &f1)
-//{
-//	if (f0 < f1)
-//		return f0;
-//
-//	return f1;
-//}
 
 struct CollisionData1D
 {
@@ -19,30 +15,30 @@ struct CollisionData1D
 	float MTV() const;
 };
 
-CollisionData1D collisionDetection1D(float Amin, float Amax, 
+CollisionData1D collisionDetection1D(float Amin, float Amax,
 									 float Bmin, float Bmax);
 
 
-struct CollisionData1DSwept
+struct CollisionDataSwept1D
 {
 	float m_entryTime, m_exitTime;
 	float m_collisionNormal; // Will be 1 or -1
 };
 
-CollisionData1DSwept collisionDetection1DSwept(float Amin, float Amax,
+CollisionDataSwept1D collisionDetectionSwept1D(float Amin, float Amax,
 											   float Bmin, float Bmax, 
 											   float Avel, float Bvel);
 
-struct CollisionData2D
+struct CollisionData
 {
 	float m_penetrationDepth;
-	Vec2 m_collisionNormal;
+	Vec2 m_collisionNormal; // Will be 1 or -1
 
 	bool resultIsCollision() const;
 	Vec2 MTV() const;
 };
 
-struct CollisionData2DSwept
+struct CollisionDataSwept
 {
 	float m_entryTime, m_exitTime;
 	Vec2 m_collisionNormal;
@@ -50,14 +46,25 @@ struct CollisionData2DSwept
 	bool resultIsCollision(const AABB &A, const AABB &B) const;
 };
 
-CollisionData2D boxCollision(const AABB &A,
-	const AABB &B);
+CollisionData aabbCollision(const AABB &A,
+							const AABB &B);
 
-CollisionData2D planeAABBCollision(const Plane &P,
+CollisionDataSwept aabbCollisionSwept(const AABB &A,
+									  const AABB &B);
+
+CollisionData planeAABBCollision(const Plane &P,
 								  const AABB &B);
 
-CollisionData2DSwept planeAABBCollisionSwept(const Plane &P,
+CollisionDataSwept planeAABBCollisionSwept(const Plane &P,
 											const AABB  &aabb,
 											const Vec2  &pVel);
 
-CollisionData1D HullCollision(const Hull &Hull_0, const Hull &Hull_1);
+CollisionData HullCollision(const Hull &Hull_0, const Hull &Hull_1);
+
+CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, const Vec2, const Vec2);
+
+CollisionData StaticResolution(Transform & TA, RigidBody & RA, Collider CA,
+							   Transform & TB, Collider CB);
+
+CollisionData DynamicResolution(Transform & TA, RigidBody & RA, Collider CA,
+								Transform & TB, RigidBody & RB, Collider CB, float bounciness);
