@@ -57,33 +57,23 @@ CollisionData ColliderCollision(const Transform &TA, const Collider &CA,
 	return collData;
 }
 
-
-// NOT COMPLETE /////////////////////////////////////////////////////////
 CollisionData StaticResolution(Transform & TA, RigidBody & RA, Collider CA,
 								Transform & TB, Collider CB, float bounciness)
 {
 	CollisionData collData = ColliderCollision(TA, CA, TB, CB);
 
-	Vec2 A_initVel = RA.getVelocity(), A_finVel;
+	Vec2 A_initVel = RA.getVelocity();
 
-	float  A_mass = RA.mass, bounce = bounciness;
-
-	if (collData.resultIsCollision())
+	if (collData.m_penetrationDepth >= 0)
 	{
 		Vec2 MTV = collData.m_collisionNormal * collData.m_penetrationDepth;
-
-		float am = magnitude(RA.velocity * RA.mass);
-
 		TA.m_position -= MTV;
 
-		A_finVel = (A_initVel * A_mass + B_initVel * B_mass + ((A_initVel - B_initVel) * -bounce) * B_mass / (A_mass * B_mass));
-
-		RA.velocity = A_finVel;
+		RA.velocity = reflection(collData.m_collisionNormal, RA.getVelocity()) * bounciness;
 	}
 
 	return collData;
 }
-
 
 CollisionData DynamicResolution(Transform & TA, RigidBody & RA, Collider CA,
 								Transform & TB, RigidBody & RB, Collider CB, float bounciness)

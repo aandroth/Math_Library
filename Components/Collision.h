@@ -43,21 +43,20 @@ struct CollisionDataSwept
 	Vec2 m_collisionNormal;
 	bool collides;
 
-	bool resultIsCollision(const AABB &A, const AABB &B) const;
+	bool resultIsCollision() const;
 };
 
 CollisionData aabbCollision(const AABB &A,
 							const AABB &B);
 
-CollisionDataSwept aabbCollisionSwept(const AABB &A,
-									  const AABB &B);
+CollisionDataSwept aabbCollisionSwept(const AABB &A, Vec2 A_vel,
+									  const AABB &B, Vec2 B_vel);
 
 CollisionData planeAABBCollision(const Plane &P,
 								  const AABB &B);
 
-CollisionDataSwept planeAABBCollisionSwept(const Plane &P,
-											const AABB  &aabb,
-											const Vec2  &pVel);
+CollisionDataSwept planeAABBCollisionSwept(const Plane &P, const Vec2  &pVel,
+										   const AABB  &aabb, const Vec2  &bVel);
 
 CollisionData HullCollision(const Hull &Hull_0, const Hull &Hull_1);
 

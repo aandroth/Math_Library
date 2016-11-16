@@ -18,6 +18,8 @@ unsigned font;
 enum Tank_State { ROTATE, MOVE };
 
 void drawOutputTextForPlane(const Plane &p, int height, Vec2 aabbVel, const AABB &ab, unsigned color);
+void drawOutputTextForAABB(const AABB aabb_static, int height, Vec2 aabbVel, const AABB &ab, unsigned color);
+void moveHull(Hull &h, Vec2 v);
 
 int main()
 {
@@ -104,11 +106,24 @@ int main()
 	plane.m_direction = Vec2(1, 0);
 	float planeRot = 0;
 
-	AABB aabb(500, 500, 100, 100);
-	Plane p0(500, 700, 200, 100);
-	Plane p1(500, 500, 200, 100);
-	Plane p2(500, 400, 200, 100);
-	Plane p3(500, 200, 200, 100);
+	AABB aabb(500, 500, 20, 20);
+	aabb.m_vel = Vec2(0, 400);
+
+	Vec2 vertArr[4];
+	vertArr[0] = Vec2(480, 120);
+	vertArr[1] = Vec2(490, 100);
+	vertArr[2] = Vec2(510, 100);
+	vertArr[3] = Vec2(520, 120);
+	vertArr[4] = Vec2(500, 130);
+
+	Hull h0(vertArr, 5);
+
+	//AABB aabb_vel(500, 900, 20, 20);
+	//AABB aabb_static(500, 500, 100, 100);
+	//Plane p0(500, 700, 200, 100);
+	//Plane p1(500, 500, 200, 100);
+	//Plane p2(500, 400, 200, 100);
+	//Plane p3(500, 200, 200, 100);
 
 	//cout << planeAABBCollision(p0, aabb).resultIsCollision() << "\n";
 	//cout << planeAABBCollision(p1, aabb).resultIsCollision() << "\n";
@@ -120,10 +135,10 @@ int main()
 	CollisionData1D c_1D_2 = collisionDetection1D(5, 10, 1, 2);
 	CollisionData1D c_1D_3 = collisionDetection1D(5, 10, 3, 12);
 
-	CollisionDataSwept col0 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
-	CollisionDataSwept col1 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
-	CollisionDataSwept col2 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
-	CollisionDataSwept col3 = planeAABBCollisionSwept(p0, aabb, Vec2(10, 10));
+	//CollisionDataSwept col0 = planeAABBCollisionSwept(p0, Vec2(0, 0), aabb, Vec2(10, 10));
+	//CollisionDataSwept col1 = planeAABBCollisionSwept(p0, Vec2(0, 0), aabb, Vec2(10, 10));
+	//CollisionDataSwept col2 = planeAABBCollisionSwept(p0, Vec2(0, 0), aabb, Vec2(10, 10));
+	//CollisionDataSwept col3 = planeAABBCollisionSwept(p0, Vec2(0, 0), aabb, Vec2(10, 10));
 	//CollisionData2D col1 = planeBoxCollision(p1, aabb);
 	//CollisionData2D col2 = planeBoxCollision(p2, aabb);
 	//CollisionData2D col3 = planeBoxCollision(p3, aabb);
@@ -135,20 +150,45 @@ int main()
 	CollisionDataSwept pBCS;
 	Vec2 aabbVel = Vec2(0, 50);
 
-	cout << p0.m_direction.x << ", " << p0.m_direction.y << "\n";
-	Vec2 vertArr[3];
-	vertArr[0] = Vec2(502, 500);
-	vertArr[1] = Vec2(498, 500);
-	vertArr[2] = Vec2(500, 504);
+	//cout << p0.m_direction.x << ", " << p0.m_direction.y << "\n";
+	//Vec2 vertArr[3];
+	//vertArr[0] = Vec2(502, 500);
+	//vertArr[1] = Vec2(498, 500);
+	//vertArr[2] = Vec2(500, 504);
 
-	Collider collider(vertArr, 3);
+	//Collider collider(vertArr, 3);
 
 	int rotateVal = 0;
 
 	while (sfw::stepContext())
 	{
-		space.update(playerTransform, rig, sfw::getDeltaTime());
-		rig.integrate(playerTransform, sfw::getDeltaTime());
+		if (sfw::getKey('W'))
+		{
+			moveHull(h0, Vec2(0, 10));
+			//aabb.m_pos.y += 10;
+			//aabb_vel.m_pos.y += 10;
+		}
+		else if (sfw::getKey('S'))
+		{
+			moveHull(h0, Vec2(0, -10));
+			//aabb.m_pos.y -= 10;
+			//aabb_vel.m_pos.y -= 10;
+		}
+		if (sfw::getKey('A'))
+		{
+			moveHull(h0, Vec2(-10, 0));
+			//aabb.m_pos.x -= 10;
+			//aabb_vel.m_pos.x -= 10;
+		}
+		else if (sfw::getKey('D'))
+		{
+			moveHull(h0, Vec2(10, 0));
+			//aabb.m_pos.x += 10;
+			//aabb_vel.m_pos.x += 10;
+		}
+
+		//space.update(playerTransform, rig, sfw::getDeltaTime());
+		//rig.integrate(playerTransform, sfw::getDeltaTime());
 		cameraTransform.m_position = lerp(cameraTransform.m_position, 
 										  playerTransform.getGlobalPosition(), 
 										  sfw::getDeltaTime() * 10);
@@ -157,11 +197,25 @@ int main()
 		Mat3 view = inverse(cameraTransform.getGlobalTransform());
 		Mat3 camera = proj * view;
 
-		playerTransform.debugDraw(camera);
-		rig.debugDraw(playerTransform);
+		//playerTransform.debugDraw(camera);
+		//rig.debugDraw(playerTransform);
 
+		drawHull(h0, GREEN);
+		//drawAABB(aabb, GREEN);
+		//drawAABB(aabb_vel, 0xAAFFAA);
+		//drawAABB(aabb_static);
 
-		//drawAABB(AABB(500, 500, 50, 100));
+		//drawPlane(p0, RED);
+		//drawPlane(p1, YELLOW);
+		//drawPlane(p2, BLUE);
+		//drawPlane(p3, BLACK);
+
+		//drawOutputTextForPlane(p0, 1000, aabb.m_vel, aabb, RED);
+		//drawOutputTextForPlane(p1,  950, aabb.m_vel, aabb, YELLOW);
+		//drawOutputTextForPlane(p2,  900, aabb.m_vel, aabb, BLUE);
+		//drawOutputTextForPlane(p3,  850, aabb.m_vel, aabb, BLACK);
+		//drawOutputTextForAABB(aabb_static, 1000, aabb.m_vel, aabb, RED);
+
 		Mat3 mat3 = mat3Identity();
 		mat3.z1 = 500;
 		mat3.z2 = 500;
@@ -188,14 +242,46 @@ void drawOutputTextForPlane(const Plane &p, int height, Vec2 aabbVel, const AABB
 		sfw::drawCircle(30, height - 10, 10, 16, RED);
 	}
 
-	//CollisionDataSwept collSwept = planeAABBCollisionSwept(p, ab, aabbVel);
-	//if (collSwept.resultIsCollision())
-	//{
-	//	sfw::drawCircle(50, height - 10, 10, 16, GREEN);
-	//}
-	//else
-	//{
-	//	sfw::drawCircle(50, height - 10, 10, 16, RED);
-	//}
-	//sfw::drawString(font, collisionResultText.c_str(), 0, 1000, 35, 35, 0, color);
+	CollisionDataSwept collSwept = planeAABBCollisionSwept(p, Vec2(0, 0), ab, aabbVel);
+	if (collSwept.resultIsCollision())
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, GREEN);
+	}
+	else
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, RED);
+	}
+}
+
+void drawOutputTextForAABB(const AABB aabb_static, int height, Vec2 aabbVel, const AABB &ab, unsigned color)
+{
+	CollisionData coll2D = aabbCollision(aabb_static, ab);
+	std::string collisionResultText;
+	sfw::drawCircle(10, height - 10, 10, 16, color);
+	if (coll2D.resultIsCollision())
+	{
+		sfw::drawCircle(30, height - 10, 10, 16, GREEN);
+	}
+	else
+	{
+		sfw::drawCircle(30, height - 10, 10, 16, RED);
+	}
+
+	CollisionDataSwept collSwept = aabbCollisionSwept(aabb_static, Vec2(0, 0), ab, aabbVel);
+	if (collSwept.resultIsCollision())
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, GREEN);
+	}
+	else
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, RED);
+	}
+}
+
+void moveHull(Hull &h, Vec2 v)
+{
+	for (int ii = 0; ii < h.m_size; ++ii)
+	{
+		h.m_vertArray[ii] += v;
+	}
 }

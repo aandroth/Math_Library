@@ -194,6 +194,7 @@ Hull::Hull(const Vec2 *a_verts, unsigned a_size)
 	{
 		m_vertArray[ii] = a_verts[ii];
 	}
+	m_size = a_size;
 }
 
 void Hull::updateNormals()

@@ -54,6 +54,10 @@ Vec2 operator* (const Vec2 &lhs, const float &rhs)
 {
 	return Vec2(lhs.x * rhs, lhs.y * rhs);
 }
+Vec2 operator* (const float &lhs, const Vec2 &rhs)
+{
+	return Vec2(lhs * rhs.x, lhs * rhs.y);
+}
 Vec2 operator*= (Vec2 &lhs, const float &rhs)
 {
 	return lhs = lhs * rhs;
@@ -132,9 +136,14 @@ Vec2 fromAngle(float a)
 	return v;
 }
 
-Vec2 reflection(const Vec2 &v)
+Vec2 projection(const Vec2 &norm, const Vec2 &v)
 {
+	return dot(v, normal(norm)) * normal(norm);
+}
 
+Vec2 reflection(const Vec2 &norm, const Vec2 &v)
+{
+	return v - 2 * projection(norm, v);
 }
 
 Vec2 lerp(const Vec2 start, const Vec2 end, const float alpha)
@@ -161,11 +170,6 @@ Vec2 cubicBezier(const Vec2 start, const Vec2 mid1, const Vec2 mid2, const Vec2 
 	Vec2 cube_mid3 = lerp(mid2, end, alpha);
 
 	return quadBezier(cube_mid1, cube_mid2, cube_mid3, alpha);
-
-	//Vec2 cube_mid1 = quadBezier(start, mid1, mid2, alpha);
-	//Vec2 cube_mid2 = quadBezier(mid1, mid2, end, alpha);
-
-	//return lerp(cube_mid1, cube_mid2, alpha);
 }
 
 Vec2 hermiteSpline(const Vec2 start, const Vec2 end, const Vec2 tangent0, const Vec2 tangent1, float alpha)

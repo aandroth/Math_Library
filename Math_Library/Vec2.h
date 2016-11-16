@@ -60,7 +60,9 @@ float angle(const Vec2 &v);
 // vec2{cos(a), sin(a)};
 Vec2 fromAngle(float a);
 
-Vec2 reflection(const Vec2 &v);
+Vec2 projection(const Vec2 &normal, const Vec2 &v);
+
+Vec2 reflection(const Vec2 &normal, const Vec2 &v);
 
 Vec2 lerp(const Vec2 start, const Vec2 end, const float alpha);
 

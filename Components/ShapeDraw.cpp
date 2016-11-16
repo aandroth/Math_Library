@@ -1,5 +1,8 @@
 #include "ShapeDraw.h"
 
+#include <iostream>
+using std::cout;
+
 void drawCircle(const Circle &circle, unsigned color)
 {
 	sfw::drawCircle(circle.m_pos.x, circle.m_pos.y, circle.m_radius, 12, color);
@@ -40,6 +43,5 @@ void drawHull(const Hull &hull, unsigned color)
 
 	Vec2 lastPoint = hull.m_vertArray[(hull.m_size - 1)];
 	Vec2 origPoint = hull.m_vertArray[0];
-
 	sfw::drawLine(lastPoint.x, lastPoint.y, origPoint.x, origPoint.y, color);
 }
