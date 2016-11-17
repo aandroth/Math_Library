@@ -40,7 +40,7 @@ void SpaceshipLocomotion::doBreakRotate(float addBreakRotate)
 void SpaceshipLocomotion::update(Transform & trans, RigidBody & rig)
 {
 	rig.addForce(Vec2(vertThrust*trans.getDirection().x,
-		vertThrust*trans.getDirection().y));
+					  vertThrust*trans.getDirection().y));
 	rig.addForce((rig.getVelocity() * -1 * vertBreakAmount)*vertBreak);
 
 	rig.addTorque(horizThrust);
