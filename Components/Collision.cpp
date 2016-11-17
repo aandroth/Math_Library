@@ -131,7 +131,8 @@ CollisionDataSwept aabbCollisionSwept(const AABB &A, Vec2 A_vel,
 
 bool CollisionDataSwept::resultIsCollision() const
 {
-	return m_entryTime >= 0 && m_entryTime <= 1;
+	//return m_entryTime >= 0 && m_entryTime <= 1;
+	return m_entryTime < m_exitTime;
 }
 
 CollisionData planeAABBCollision(const Plane &P,
@@ -207,14 +208,14 @@ CollisionData HullCollision(const Hull &Hull_0, const Hull &Hull_1)
 		for (int jj = 0; jj < Hull_0.m_size; ++jj)
 		{
 			float dotProduct_0 = dot(allNormalsArr[ii], Hull_0.m_vertArray[jj]);
-			aMin > dotProduct_0 ? dotProduct_0 : aMin;
-			aMax < dotProduct_0 ? dotProduct_0 : aMax;
+			aMin > dotProduct_0 ? aMin = dotProduct_0 : aMin;
+			aMax < dotProduct_0 ? aMax = dotProduct_0 : aMax;
 		}
 		for (int jj = 0; jj < Hull_1.m_size; ++jj)
 		{
 			float dotProduct_1 = dot(allNormalsArr[ii], Hull_1.m_vertArray[jj]);
-			bMin > dotProduct_1 ? dotProduct_1 : bMin;
-			bMax < dotProduct_1 ? dotProduct_1 : bMax;
+			bMin > dotProduct_1 ? bMin = dotProduct_1 : bMin;
+			bMax < dotProduct_1 ? bMax = dotProduct_1 : bMax;
 		}
 
 		float pDr, pDl, pD, Dir;
@@ -231,14 +232,15 @@ CollisionData HullCollision(const Hull &Hull_0, const Hull &Hull_1)
 			bestColl.m_collisionNormal = allNormalsArr[ii] * Dir;
 		}
 	}
+
 	return bestColl;
 }
 
-CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, const Vec2 Vel_0, const Vec2 Vel_1)
+CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Vec2 Vel_0, const Hull &Hull_1, const Vec2 Vel_1)
 {
 	CollisionDataSwept bestColl;
-	bestColl.m_entryTime = INFINITY;
-	bestColl.m_exitTime = -INFINITY;
+	bestColl.m_entryTime = -INFINITY;
+	bestColl.m_exitTime = INFINITY;
 
 	Vec2 allNormalsArr[32];
 
@@ -259,19 +261,19 @@ CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, co
 		for (int jj = 0; jj < Hull_0.m_size; ++jj)
 		{
 			float dotProduct_0 = dot(allNormalsArr[ii], Hull_0.m_vertArray[jj]);
-			aMin > dotProduct_0 ? dotProduct_0 : aMin;
-			aMax < dotProduct_0 ? dotProduct_0 : aMax;
+			aMin > dotProduct_0 ? aMin = dotProduct_0 : aMin;
+			aMax < dotProduct_0 ? aMax = dotProduct_0 : aMax;
 		}
 		for (int jj = 0; jj < Hull_1.m_size; ++jj)
 		{
 			float dotProduct_1 = dot(allNormalsArr[ii], Hull_1.m_vertArray[jj]);
-			bMin > dotProduct_1 ? dotProduct_1 : bMin;
-			bMax < dotProduct_1 ? dotProduct_1 : bMax;
+			bMin > dotProduct_1 ? bMin = dotProduct_1 : bMin;
+			bMax < dotProduct_1 ? bMax = dotProduct_1 : bMax;
 		}
 
 		float pDr, pDl, pEntry, pExit, Dir;
-		pDr = aMax - bMin;
-		pDl = bMax - aMin;
+		pDr = (aMin - bMax) / (dot(allNormalsArr[ii], (Vel_1 - Vel_0)));
+		pDl = (bMin - aMax) / (dot(allNormalsArr[ii], (Vel_0 - Vel_1)));
 
 		pEntry = fmaxf(pDr, pDl);
 		pExit = fminf(pDr, pDl);
@@ -289,5 +291,27 @@ CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, co
 			bestColl.m_exitTime = pExit;
 		}
 	}
+
+	//if (collisionY_swept.m_entryTime < collisionX_swept.m_entryTime || xSwept && !ySwept)
+	//{
+	//	retVal.m_collisionNormal = Vec2(1, 0) * collisionX_swept.m_collisionNormal;
+	//	retVal.m_entryTime = collisionX_swept.m_entryTime;
+	//	retVal.collides = ySwept || collisionY.resultIsCollision();
+	//}
+	//else if (ySwept) // collisionY_swept.m_entryTime >= collisionX_swept.m_entryTime
+	//{
+	//	retVal.m_collisionNormal = Vec2(1, 0) * collisionY_swept.m_collisionNormal;
+	//	retVal.m_entryTime = collisionY_swept.m_entryTime;
+	//	retVal.collides = xSwept || collisionX.resultIsCollision();
+	//}
+	//if (collisionY_swept.m_exitTime < collisionX_swept.m_exitTime || ySwept && !xSwept)
+	//{
+	//	retVal.m_exitTime = collisionY_swept.m_exitTime;
+	//}
+	//else if (xSwept) // collisionY_swept.m_exitTime >= collisionX_swept.m_exitTime
+	//{
+	//	retVal.m_exitTime = collisionX_swept.m_exitTime;
+	//}
+
 	return bestColl;
 }

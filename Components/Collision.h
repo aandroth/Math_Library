@@ -60,5 +60,5 @@ CollisionDataSwept planeAABBCollisionSwept(const Plane &P, const Vec2  &pVel,
 
 CollisionData HullCollision(const Hull &Hull_0, const Hull &Hull_1);
 
-CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Hull &Hull_1, const Vec2, const Vec2);
+CollisionDataSwept HullCollisionSwept(const Hull &Hull_0, const Vec2, const Hull &Hull_1, const Vec2);
 

@@ -19,6 +19,7 @@ enum Tank_State { ROTATE, MOVE };
 
 void drawOutputTextForPlane(const Plane &p, int height, Vec2 aabbVel, const AABB &ab, unsigned color);
 void drawOutputTextForAABB(const AABB aabb_static, int height, Vec2 aabbVel, const AABB &ab, unsigned color);
+void drawOutputTextForHull(const Hull hull_static, int height, Vec2 hullVel, const Hull &h, unsigned color);
 void moveHull(Hull &h, Vec2 v);
 
 int main()
@@ -117,9 +118,12 @@ int main()
 	vertArr[4] = Vec2(500, 130);
 
 	Hull h0(vertArr, 5);
-
-	//AABB aabb_vel(500, 900, 20, 20);
-	//AABB aabb_static(500, 500, 100, 100);
+	Hull h0_0(vertArr, 5);
+	moveHull(h0_0, Vec2(0, 100));
+	Hull h1(vertArr, 5);
+	moveHull(h1, Vec2(0, 200));
+	AABB aabb_vel(500, 900, 20, 20);
+	AABB aabb_static(500, 500, 100, 100);
 	//Plane p0(500, 700, 200, 100);
 	//Plane p1(500, 500, 200, 100);
 	//Plane p2(500, 400, 200, 100);
@@ -164,28 +168,45 @@ int main()
 	{
 		if (sfw::getKey('W'))
 		{
-			moveHull(h0, Vec2(0, 10));
-			//aabb.m_pos.y += 10;
-			//aabb_vel.m_pos.y += 10;
+			aabb.m_pos.y += 10;
+			aabb_vel.m_pos.y += 10;
 		}
 		else if (sfw::getKey('S'))
 		{
-			moveHull(h0, Vec2(0, -10));
-			//aabb.m_pos.y -= 10;
-			//aabb_vel.m_pos.y -= 10;
+			aabb.m_pos.y -= 10;
+			aabb_vel.m_pos.y -= 10;
 		}
 		if (sfw::getKey('A'))
 		{
-			moveHull(h0, Vec2(-10, 0));
-			//aabb.m_pos.x -= 10;
-			//aabb_vel.m_pos.x -= 10;
+			aabb.m_pos.x -= 10;
+			aabb_vel.m_pos.x -= 10;
 		}
 		else if (sfw::getKey('D'))
 		{
-			moveHull(h0, Vec2(10, 0));
-			//aabb.m_pos.x += 10;
-			//aabb_vel.m_pos.x += 10;
+			aabb.m_pos.x += 10;
+			aabb_vel.m_pos.x += 10;
 		}
+
+		//if (sfw::getKey('W'))
+		//{
+		//	moveHull(h0, Vec2(0, 10));
+		//	moveHull(h0_0, Vec2(0, 10));
+		//}
+		//else if (sfw::getKey('S'))
+		//{
+		//	moveHull(h0, Vec2(0, -10));
+		//	moveHull(h0_0, Vec2(0, -10));
+		//}
+		//if (sfw::getKey('A'))
+		//{
+		//	moveHull(h0, Vec2(-10, 0));
+		//	moveHull(h0_0, Vec2(-10, 0));
+		//}
+		//else if (sfw::getKey('D'))
+		//{
+		//	moveHull(h0, Vec2(10, 0));
+		//	moveHull(h0_0, Vec2(10, 0));
+		//}
 
 		//space.update(playerTransform, rig, sfw::getDeltaTime());
 		//rig.integrate(playerTransform, sfw::getDeltaTime());
@@ -200,10 +221,12 @@ int main()
 		//playerTransform.debugDraw(camera);
 		//rig.debugDraw(playerTransform);
 
-		drawHull(h0, GREEN);
-		//drawAABB(aabb, GREEN);
-		//drawAABB(aabb_vel, 0xAAFFAA);
-		//drawAABB(aabb_static);
+		//drawHull(h0, GREEN);
+		//drawHull(h0_0, 0xAAFFAA);
+		//drawHull(h1, YELLOW);
+		drawAABB(aabb, GREEN);
+		drawAABB(aabb_vel, 0xAAFFAA);
+		drawAABB(aabb_static);
 
 		//drawPlane(p0, RED);
 		//drawPlane(p1, YELLOW);
@@ -214,7 +237,8 @@ int main()
 		//drawOutputTextForPlane(p1,  950, aabb.m_vel, aabb, YELLOW);
 		//drawOutputTextForPlane(p2,  900, aabb.m_vel, aabb, BLUE);
 		//drawOutputTextForPlane(p3,  850, aabb.m_vel, aabb, BLACK);
-		//drawOutputTextForAABB(aabb_static, 1000, aabb.m_vel, aabb, RED);
+		drawOutputTextForAABB(aabb_static, 1000, aabb.m_vel, aabb, RED);
+		//drawOutputTextForHull(h1, 1000, Vec2(0, 100), h0, GREEN);
 
 		Mat3 mat3 = mat3Identity();
 		mat3.z1 = 500;
@@ -268,6 +292,31 @@ void drawOutputTextForAABB(const AABB aabb_static, int height, Vec2 aabbVel, con
 	}
 
 	CollisionDataSwept collSwept = aabbCollisionSwept(aabb_static, Vec2(0, 0), ab, aabbVel);
+	if (collSwept.resultIsCollision())
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, GREEN);
+	}
+	else
+	{
+		sfw::drawCircle(50, height - 10, 10, 16, RED);
+	}
+}
+
+void drawOutputTextForHull(const Hull hull_static, int height, Vec2 hullVel, const Hull &h, unsigned color)
+{
+	CollisionData coll2D = HullCollision(hull_static, h);
+
+	sfw::drawCircle(10, height - 10, 10, 16, color);
+	if (coll2D.resultIsCollision())
+	{
+		sfw::drawCircle(30, height - 10, 10, 16, GREEN);
+	}
+	else
+	{
+		sfw::drawCircle(30, height - 10, 10, 16, RED);
+	}
+
+	CollisionDataSwept collSwept = HullCollisionSwept(hull_static, Vec2(0, 0), h, hullVel);
 	if (collSwept.resultIsCollision())
 	{
 		sfw::drawCircle(50, height - 10, 10, 16, GREEN);
