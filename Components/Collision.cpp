@@ -21,16 +21,30 @@ CollisionData1D collisionDetection1D(float Amin, float Amax,
 	float tl = Bmax - Amin, 
 		  tr = Amax - Bmin;
 
-	 if (tl < tr)
-	 {
-		 collisionDataDetection.m_penetrationDepth = tl;
-		 collisionDataDetection.m_collisionNormal  = -1;
-	 }
-	 else
-	 {
-		 collisionDataDetection.m_penetrationDepth = tr;
-		 collisionDataDetection.m_collisionNormal  = 1;
-	 }
+	cout << "Amin: " << Amin << ", Amax: " << Amax << "\n";
+	cout << "Bmin: " << Bmin << ", Bmax: " << Bmax << "\n";
+	cout << "tl: " << tl << ", tr: " << tr << "\n";
+
+
+	 //if (tl < tr)
+	 //{
+		// collisionDataDetection.m_penetrationDepth = tl;
+		// collisionDataDetection.m_collisionNormal  = -1;
+	 //}
+	 //else
+	 //{
+		// collisionDataDetection.m_penetrationDepth = tr;
+		// collisionDataDetection.m_collisionNormal  = 1;
+	 //}
+
+	collisionDataDetection.m_penetrationDepth = fmin(tl, tr);
+
+	//if(tl > tr)
+		collisionDataDetection.m_collisionNormal = copysignf(1, tl - tr);
+	//else
+	//	collisionDataDetection.m_collisionNormal = copysignf(1, tr - tl);
+
+	cout << "m_collisionNormal: " << collisionDataDetection.m_collisionNormal << "\n";
 
 	return collisionDataDetection;
 }
@@ -67,19 +81,26 @@ CollisionData aabbCollision(const AABB &A,
 {
 	CollisionData retVal;
 
-	CollisionData1D collisionX = collisionDetection1D(A.min().x, A.max().x, B.min().x, B.max().x),
-					collisionY = collisionDetection1D(A.min().y, A.max().y, B.min().y, B.max().y);
+	cout << "collisionX: " << "\n";
+	CollisionData1D collisionX = collisionDetection1D(A.min().x, A.max().x, B.min().x, B.max().x);
+	cout << "collisionY: " << "\n";
+	CollisionData1D	collisionY = collisionDetection1D(A.min().y, A.max().y, B.min().y, B.max().y);
 
 	if (collisionX.MTV() < collisionY.MTV())
 	{
 		retVal.m_penetrationDepth = collisionX.m_penetrationDepth;
 		retVal.m_collisionNormal = Vec2(1, 0) * collisionX.m_collisionNormal;
+		cout << "Collision along X " << "\n";
 	}
 	else// (collisionX.MTV() >= collisionY.MTV())
 	{
 		retVal.m_penetrationDepth = collisionY.m_penetrationDepth;
-		retVal.m_collisionNormal = Vec2(1, 0) * collisionY.m_collisionNormal;
+		retVal.m_collisionNormal = Vec2(0, 1) * collisionY.m_collisionNormal;
+		cout << "Collision along Y " << "\n";
 	}
+	cout << "collisionX.MTV(): " << collisionX.MTV() << "\n";
+	cout << "collisionY.MTV(): " << collisionY.MTV() << "\n";
+	cout << "\n\n";
 
 	return retVal;
 }
@@ -106,12 +127,15 @@ CollisionDataSwept aabbCollisionSwept(const AABB &A, Vec2 A_vel,
 		retVal.m_collisionNormal = Vec2(1, 0) * collisionX_swept.m_collisionNormal;
 		retVal.m_entryTime = collisionX_swept.m_entryTime;
 
+
 		retVal.collides = ySwept || collisionY.resultIsCollision();
 	}
 	else if (ySwept) // collisionY_swept.m_entryTime >= collisionX_swept.m_entryTime
 	{
-		retVal.m_collisionNormal = Vec2(1, 0) * collisionY_swept.m_collisionNormal;
+		retVal.m_collisionNormal = Vec2(0, 1) * collisionY_swept.m_collisionNormal;
 		retVal.m_entryTime = collisionY_swept.m_entryTime;
+
+		//cout << xSwept << ", " << collisionX.resultIsCollision() << "\n\n";
 
 		retVal.collides = xSwept || collisionX.resultIsCollision();
 	}
@@ -131,8 +155,8 @@ CollisionDataSwept aabbCollisionSwept(const AABB &A, Vec2 A_vel,
 
 bool CollisionDataSwept::resultIsCollision() const
 {
-	//return m_entryTime >= 0 && m_entryTime <= 1;
-	return m_entryTime < m_exitTime;
+	return m_entryTime >= 0 && m_entryTime <= 1;
+	//return m_entryTime < m_exitTime;
 }
 
 CollisionData planeAABBCollision(const Plane &P,

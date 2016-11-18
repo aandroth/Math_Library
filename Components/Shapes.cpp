@@ -1,5 +1,8 @@
 #include "Shapes.h"
 
+#include <iostream>
+using std::cout;
+
 Circle::Circle(Circle &circle)
 {
 	m_radius = circle.m_radius;
@@ -56,6 +59,9 @@ AABB::AABB(Vec2 new_pos, Vec2 new_he)
 
 Vec2 AABB::min() const
 {
+	//cout << m_pos.x << ", " << m_pos.y << "\n";
+	//cout << m_he.x << ", " << m_he.y << "\n";
+	//cout << m_pos.x - m_he.x << ", " << m_pos.y - m_he.y << "\n\n";
 	return m_pos - m_he;
 }
 

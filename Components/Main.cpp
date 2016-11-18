@@ -291,15 +291,22 @@ void drawOutputTextForAABB(const AABB aabb_static, int height, Vec2 aabbVel, con
 		sfw::drawCircle(30, height - 10, 10, 16, RED);
 	}
 
-	CollisionDataSwept collSwept = aabbCollisionSwept(aabb_static, Vec2(0, 0), ab, aabbVel);
-	if (collSwept.resultIsCollision())
-	{
-		sfw::drawCircle(50, height - 10, 10, 16, GREEN);
-	}
-	else
-	{
-		sfw::drawCircle(50, height - 10, 10, 16, RED);
-	}
+	sfw::drawLine(10, dot(Vec2(0, 1), aabb_static.min()), 10, dot(Vec2(0, 1), aabb_static.max()), BLUE);
+	sfw::drawLine(15, dot(Vec2(0, 1), ab.min()), 15, dot(Vec2(0, 1), ab.max()), RED);
+
+	sfw::drawLine(dot(Vec2(1, 0), aabb_static.min()), 10, dot(Vec2(1, 0), aabb_static.max()), 10, BLUE);
+	sfw::drawLine(dot(Vec2(1, 0), ab.min()), 15, dot(Vec2(1, 0), ab.max()), 15, RED);
+//	cout << ab.max().x << ", " << ab.max().y << "\n\n";
+
+	//CollisionDataSwept collSwept = aabbCollisionSwept(aabb_static, Vec2(0, 0), ab, aabbVel);
+	//if (collSwept.collides)
+	//{
+	//	sfw::drawCircle(50, height - 10, 10, 16, GREEN);
+	//}
+	//else
+	//{
+	//	sfw::drawCircle(50, height - 10, 10, 16, RED);
+	//}
 }
 
 void drawOutputTextForHull(const Hull hull_static, int height, Vec2 hullVel, const Hull &h, unsigned color)
